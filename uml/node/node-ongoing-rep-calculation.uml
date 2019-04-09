@@ -1,0 +1,39 @@
+@startuml
+
+title ongoing_rep_calculation
+
+(*)--> get_current_timestamp
+
+--> vote_processor.calculate_weights()
+-->AlarmTriggered
+
+note right
+Alarm set to expire in **10 minutes**. After expiration,
+method is invoked.
+end note
+-->(*)
+
+partition vote_processor.calculate_weights() {
+
+    get_current_timestamp --> Request lock
+    if ProcessNotStopped
+     -->[Np] representatives_1.clear()
+     --> representatives_2.clear()
+     --> representatives_3.clear()
+     --> Update sets
+     note left
+     
+     Unordered sets to provide quicker lookup. 
+     
+     **supply**: node's view of online reps with active stake online
+     **weight**: node's view of weith held by representative
+     
+     
+     **1st: weight > supply / 1000**  (0.1% or above)
+     **2nd: weight > supply / 100**   (1% or above)
+     **3rd: weight > supply / 20**    (5% or above)
+     end note
+    end if
+}
+
+@enduml

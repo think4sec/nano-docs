@@ -1,0 +1,47 @@
+@startuml
+
+title rep_crawler::start
+
+(*)--> "ongoing_crawl()"
+
+
+partition ongoing_crawl() {
+
+    --> get_current_timestamp
+    get_current_timestamp --> "total_weight()"
+
+    note left
+    **rep_crawler::total_weight method()** is called to summate 
+    weight of peers (reps) seen by node thus far.
+    end note
+
+    "total_weight()" -->[query] get_crawl_targets()
+
+    note right
+    Argument **total_weight** is passed to method and used 
+    as an indicator to determine if sufficient weighted
+    peers (reps) have been contacted.
+    end note
+
+    if sufficient_weight?
+    -->[No] node.keepalive_preconfigured
+
+    note left
+    Reach out to **preconfigured_peers** defined in config file
+    if sufficient weight is not seen by node.
+    end note
+    --> "Set timer expiration"
+    else
+    -->[Yes] "Set timer expiration"
+    end if
+
+    note right
+    If sufficient_weight is met set timer expiration (next run time) 
+    to be 7 seconds from current_timestamp, otherwise 3 seconds.
+    end note
+
+    "Set timer expiration" --> AlarmTriggered
+}
+-->(*)
+
+@enduml

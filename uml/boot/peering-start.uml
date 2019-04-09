@@ -1,0 +1,13 @@
+@startuml
+
+title: Peering Start
+
+(*)--> "nano::node::start"
+
+"nano::node::start" --> nano::network::start
+"nano::node::start" --> nano::node::add_initial_peers
+"nano::node::start" --> nano::rep_crawler::start
+"nano::node::start" --> nano::node::ongoing_peer_store
+
+
+@enduml

@@ -1,0 +1,33 @@
+@startuml
+
+title ongoing_bootstrap
+
+(*)--> Set timer
+note right
+Set default expiration to **300** seconds
+end note
+
+if warmed_up < 3
+ -->[Yes] "!bootstrap_initiator.in_progress()"
+
+ if ""
+ 
+ "!bootstrap_initiator.in_progress()" -->[Yes] "!network.empty()"
+  note left 
+  Set timer expiration to **5** seconds
+  end note
+  
+ "!network.empty()" --> "increment warmed_up"
+ "increment warmed_up" --> bootstrap_initiator.bootstrap()
+ else
+ -->[No] bootstrap_initiator.bootstrap()
+ end if
+ 
+else
+ -->[No] bootstrap_initiator.bootstrap()
+end if
+
+--> AlarmTriggered
+AlarmTriggered --> Set timer
+
+@enduml

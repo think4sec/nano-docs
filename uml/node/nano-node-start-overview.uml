@@ -1,0 +1,37 @@
+@startuml
+
+title Nano Node Start Overview
+
+(*) --> "nano::node::start"
+
+ --> network.start
+ --> add_initial_peers
+ --> ongoing_bootstrap
+ note right
+ Only if flag **disable_legacy_bootstrap** is not set
+ end note
+ --> ongoing_unchecked_cleanup
+ note right
+ Only if flag **disable_unchecked_cleanup** is not set
+ end note
+ --> ongoing_store_flush
+ --> rep_crawler.start
+ --> ongoing_rep_calculation
+ --> ongoing_peer_store
+ --> ongoing_online_weight_calculation_queue
+ --> bootstrap.start
+ note right
+ Only if flag **disable_bootstrap_listener** is not set
+ end note
+ --> backup_wallet
+ note right
+ Only if flag **disable_backup** is not set
+ end note
+ --> search_pending
+ --> bootstrap_wallet
+ note right
+ Only if flag **disable_wallet_bootstrap** is not set
+ Delay start by at **least 1 minute**
+ end note
+ --> port_mapping.start
+@enduml

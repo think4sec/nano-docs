@@ -1,0 +1,21 @@
+@startuml
+
+title ongoing_peer_store
+
+(*)--> network.udp_channels.store_all
+
+note right
+This method refreshes a node's peer list.
+end note
+
+network.udp_channels.store_all --> AlarmTriggered
+
+note right
+Timer expiration is set by **network_params.node.peer_interval** value.
+This value is **300 seconds** for non-test network, otherwise 
+**1 second**
+end note
+
+AlarmTriggered --> (*)
+
+@enduml

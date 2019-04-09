@@ -1,0 +1,21 @@
+@startuml
+
+title ongoing_unchecked_cleanup
+
+(*)--> "bootstrap_initiator.in_progress()"
+
+"bootstrap_initiator.in_progress()" -left>[No] "unchecked_cleanup()"
+"unchecked_cleanup()" --> "Wait"
+"bootstrap_initiator.in_progress()" -->[Yes] "Wait"
+note left
+The timer expiration is set to the value of
+**network_params.node.unchecked_cleaning_interval** which the
+default value is: **2 hours**
+
+end note
+
+"Wait" --> AlarmTriggered
+AlarmTriggered -> "bootstrap_initiator.in_progress()"
+
+
+@enduml

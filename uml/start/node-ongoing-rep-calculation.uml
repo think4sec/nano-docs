@@ -1,0 +1,33 @@
+@startuml
+
+title ongoing_rep_calculation
+
+(*)--> get_current_timestamp
+
+get_current_timestamp -right> vote_processor.calculate_weights
+
+note right
+
+**supply** represents online_reps online stake from node's perspective
+**weight** represents weight manually assigned to reps by account holders
+
+3 weighted buckets are created based on represetnatives weight class
+
+1st: weight > supply/1000 (**0.1% or above**)
+2nd: weight > supply/100 (**1% or above**)
+3rd: weight > supply/20 (**5% or above**)
+
+These buckets are used by the **vote_processor** to quickly determine if
+a representative is a voting rep.
+end note
+
+vote_processor.calculate_weights --> "10 minute timer"
+
+if expired
+-->[Yes] get_current_timestamp
+else
+-->[No] Wait
+--> "10 minute timer"
+end if
+
+@enduml

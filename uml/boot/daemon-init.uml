@@ -1,0 +1,10 @@
+@startuml
+
+title Daemon Initialize
+
+(*)--> "nano_node::entry"
+
+"nano_node::entry" --> "nano_daemon::daemon::run"
+"nano_daemon::daemon::run" --> nano::node::node::start
+
+@enduml

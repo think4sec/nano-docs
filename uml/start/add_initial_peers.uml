@@ -1,0 +1,38 @@
+@startuml
+
+title add_initial_peers
+
+
+(*)--> store.peers_begin
+note right
+Iterate over peers retrieved from data store
+end note
+store.peers_begin --> network.udp_channels.reachout
+ note left
+ The channel represents udp channels created for peer
+ communication. 
+ 
+ The reachout method verifies communication
+ address is valid. In addition, the option 'allow_local_peers'
+ ensures, addresses found within the rfc1918 reserved space
+ can be targeted for peering.
+ end note
+
+network.udp_channels.reachout -->[channel] send_keepalive
+send_keepalive --> [channel]rep_crawler.query
+
+note left
+The query method intiially adds peer communication channel to list.
+Peer is processed/verified by sending random block hash
+to peer. Peer must vote on block within 5 seconds, otherwise
+it is removed from list.
+
+end note
+ if "Peers remaining" then
+    -->[Yes] store.peers_begin
+else
+    -->[No] store.peers_end
+    --> (*)
+end if
+ 
+@enduml

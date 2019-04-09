@@ -1,0 +1,13 @@
+@startuml
+
+title Nano Node
+
+(*)--> Server
+
+Server --> Bootstrap
+Server--> Peering
+Server --> Quorum
+Server --> RPC/API
+Server --> Wallet
+
+@enduml
