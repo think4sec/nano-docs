@@ -37,4 +37,4 @@ Focuses on
 
 ### Review:
 
-[nano-node-role]: images/general/nano-node-role.png
+[nano-node-role]: images/node/nano-node-role.png
