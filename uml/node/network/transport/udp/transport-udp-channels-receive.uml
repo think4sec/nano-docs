@@ -1,0 +1,63 @@
+@startuml
+
+title nano::transport::udp_channels::receive
+
+(*)-->Get Queue Object Reference
+
+note right
+
+Call to **message_buffer_manager.allocate()** that returns 
+ptr to **message_buffer** type object.
+
+**free** queue: memory pointers that can be written over
+**full** queue: memory pointers unused or first if full
+
+Queue is a **message_buffer_manager** object. Access
+to object is handled by ref **buffer_container**
+
+Data buffer size is **512** bytes
+Queue supports up to **4096** entries (**512*4096 = 2MB**)
+
+end note
+
+--> socket.async_receive_from
+note left
+Setup buffer for peer communication, storing the following:
+
+data->buffer (store data up to **512** bytes)
+data->endpoint
+
+end note
+
+socket.async_receive_from -> bind_executor
+note right 
+Main handler for populating **message_buffer**
+end note
+
+if NotStoppedAndRunning
+-->[Yes] enqueue data
+note left
+call to **message_buffer_manager::enqueue** method.
+
+Pushes data into **full** buffer and notify all 
+waiting threads.
+end note
+
+--> receive()
+else
+-->[No] release data
+note right
+call to **message_buffer_manager::release** method.
+
+Pushes data into **free** buffer and notify all 
+waiting threads.
+end note
+--> log error message (if error)
+--> Wait **5 seconds**
+--> receive()
+end if
+
+note left
+receive() refers to **nano::transport::udp_channels::receive** method
+end note
+@enduml

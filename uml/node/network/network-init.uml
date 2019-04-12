@@ -1,0 +1,43 @@
+@startuml
+
+title nano::network::network
+
+(*)-->Setup Buffer Container
+note right
+Setup **message_buffer_manager** object using **buffer_container**
+ref variable.
+end note
+
+--> Set **node** ref object
+--> Setup udp_channels
+
+note right
+Setup main listening socket for peering.
+
+Set **local_endpoint** to default to node's v6::loopback() 
+and configuration peering port.
+end note
+
+-->Setup lambda function disconnect_observer
+
+note right
+Method setup during **node** startup.
+Basically serves to notify when **observers**
+disconnect.
+end note
+
+--> Main
+Main -> Create packet processing threads
+
+note right
+**network_threads**: Configuration file entry network_threads
+
+Creates a total of **network_threads** packet processing
+threads. Each thread, will invoke 
+**udp_channels.process_packets()** method
+
+**Default: Maximum(4,  hardware_support) threads**
+
+
+end note
+@enduml

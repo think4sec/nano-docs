@@ -77,9 +77,22 @@ A json array containing pairing of **host and port** destinations where proof-of
 ## Initialization
 ![Daemon Initialize][daemon-init]
 
+### network::start
+
+
+![node-network-init]
 
 ## Start
 ![Peering Related Startup][peering-boot]
+
+### network::start:
+
+Main entry for majority of functionality for node. It setups listener for peering as well as sockets (**channels**) for peer communication.
+
+![node-network-start]
+
+![node-network-udp-start]
+[node-network-udp-receive]
 
 ### add\_initial\_peers:
 
@@ -99,6 +112,12 @@ The image below depicts the main sequence taken when peers are listed within a n
 ![Ongoing Peer Store][node-ongoing-peer-store]
 
 ## Running
+
+### network:
+
+![node-network-udp-process-packets]
+![node-network-udp-receive-action]
+
 [peering-overview]: ../images/overview/peering-overview.png
 [daemon-init]: ../images/boot/daemon-init.png
 
@@ -108,6 +127,12 @@ The image below depicts the main sequence taken when peers are listed within a n
 [rep-crawler-start]: ../images/node/rep_crawler/rep-crawler-start.png
 [node-ongoing-peer-store]: ../images/node/node-ongoing-peer-store.png
 
+[node-network-start]: ../images/node/network/network-start.png
+[node-network-init]: ../images/node/network/network-init.png
+[node-network-udp-process-packets]: ../images/node/network/transport/udp/transport-udp-channels-process-packets.png
+[node-network-udp-start]: ../images/node/network/transport/udp/transport-udp-channels-start.png
+[node-network-udp-receive]: ../images/node/network/transport/udp/transport-udp-channels-receive.png
+[node-network-udp-receive-action]: ../images/node/network/transport/udp/transport-udp-channels-receive-action.png
 
 [store-init]: https://github.com/nanocurrency/nano-node/blob/d0153243f9d3f89e34b211ee566c1100e502fa3a/nano/node/node.cpp#L1020
 [network-init]: https://github.com/nanocurrency/nano-node/blob/d0153243f9d3f89e34b211ee566c1100e502fa3a/nano/node/node.cpp#L1026

@@ -1,0 +1,13 @@
+@startuml
+
+title nano::network::start
+
+(*)--> ongoing_cleanup
+--> udp_channels.start()
+
+note right
+Start up udp receive listener with total threads size based on 
+configuration for **io_threads**.
+end note
+
+@enduml

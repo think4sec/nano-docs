@@ -1,0 +1,28 @@
+@startuml
+
+title nano::transport::udp_channels::process_packets
+
+(*)--> Retreive data from queue
+
+note right
+Calls **message_buffer_manager.dequeue()** method to retrieve
+front of queue stored data.
+end note
+
+--> receive_action()
+
+note right
+Purpose of method:
+
+Verify sender of packet is not local unless **allow_local_peers**
+is defined in configuration file.
+
+Process data received from peer(s)
+end note
+
+--> release
+note right
+Calls **message_buffer_manager.release()** method to mark
+entry for reuse
+end note
+@enduml

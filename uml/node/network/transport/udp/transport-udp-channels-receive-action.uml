@@ -1,0 +1,28 @@
+@startuml
+
+title nano::transport::udp_channels::receive_action
+
+(*)--> Verify sender is allowed
+
+note right
+Do not process data from the following:
+
+Peer is **local loopback**
+Peer is **reserved address** (Exception: **allow_local_peers** set)
+end note
+
+--> Setup **udp_message_visitor** object
+--> Setup **message_parser** object
+--> parser.deserialize_buffer()
+note right
+Deserialize received data into it's appropriate message:
+
+**keepalive**
+**publish**
+**confirm_req**
+**confirm_ack**
+**node_id_handshake**
+
+then data is passed to appropriate handler functions
+end note
+@enduml

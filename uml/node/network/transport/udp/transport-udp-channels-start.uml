@@ -1,0 +1,15 @@
+@startuml
+
+title nano::transport::udp_channels::start
+
+(*)--> Start up **io_threads** for **receive** listener
+
+note right
+**io_threads** refers to configuration item io_threads. Each
+thread is tied to the local **receive()** method.
+end note
+
+--> ongoing_keepalive()
+--> ongoing_syn_cookie_cleanup()
+
+@enduml
