@@ -91,8 +91,8 @@ Main entry for majority of functionality for node. It setups listener for peerin
 
 ![node-network-start]
 
-![node-network-udp-start]
-[node-network-udp-receive]
+![node-network-udp-start]  
+![node-network-udp-receive]
 
 ### add\_initial\_peers:
 
