@@ -117,6 +117,8 @@ The image below depicts the main sequence taken when peers are listed within a n
 
 ![node-network-udp-process-packets]
 ![node-network-udp-receive-action]
+![node-common-deserialize-buffer]
+![node-common-deserialize-publish]
 
 [peering-overview]: ../images/overview/peering-overview.png
 [daemon-init]: ../images/boot/daemon-init.png
@@ -133,6 +135,8 @@ The image below depicts the main sequence taken when peers are listed within a n
 [node-network-udp-start]: ../images/node/network/transport/udp/transport-udp-channels-start.png
 [node-network-udp-receive]: ../images/node/network/transport/udp/transport-udp-channels-receive.png
 [node-network-udp-receive-action]: ../images/node/network/transport/udp/transport-udp-channels-receive-action.png
+[node-common-deserialize-buffer]: ../images/node/node-common-message-parser-deserialize-buffer.png
+[node-common-deserialize-publish]: ../images/node/node-common-message-parser-deserialize-publish.png
 
 [store-init]: https://github.com/nanocurrency/nano-node/blob/d0153243f9d3f89e34b211ee566c1100e502fa3a/nano/node/node.cpp#L1020
 [network-init]: https://github.com/nanocurrency/nano-node/blob/d0153243f9d3f89e34b211ee566c1100e502fa3a/nano/node/node.cpp#L1026

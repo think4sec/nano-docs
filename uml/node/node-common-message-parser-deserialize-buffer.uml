@@ -1,0 +1,45 @@
+@startuml
+
+title nano::message_parser::deserialize_buffer
+
+(*)--> Load **network_constants**
+--> Set default status to **parse_status::success**
+--> Verify payload size
+
+note right
+Compares payload size from peer to be <= **508** bytes,
+otherwise flagged as an invalid header.
+end note
+
+--> Setup bufferstream
+note right
+Read data into **bufferstream** object.
+end note
+
+--> Extract payload header from bufferstream
+if OutDatedVersion?
+-->[Yes] set status to **parse_status::outdated_version**
+-->(*)
+else
+-->[No] Check **header.type**
+note left
+**header** and **stream** objects are both passed as
+arguments to functions listed below. Function association
+is based on parsed **header.type**
+
+**keepalive**: deserialize_keepalive()
+**publish**: deserialize_publish()
+**confirm_req**: deserialize_confirm_req()
+**confirm_ack**: deserialize_confirm_ack()
+**node_id_handshake**: deserialize_node_id_handshake()
+
+otherwise, status is **parse_status::invalid_message_type**
+end note
+ "Check **header.type**" --> deserialize_keepalive()
+ "Check **header.type**" --> deserialize_publish()
+ "Check **header.type**" --> deserialize_confirm_req()
+ "Check **header.type**" --> deserialize_confirm_ack()
+ "Check **header.type**" --> deserialize_node_id_handshake()
+end if
+
+@enduml

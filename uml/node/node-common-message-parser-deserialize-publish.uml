@@ -1,0 +1,25 @@
+@startuml
+
+title nano::message_parser::deserialize_publish
+
+(*)--> Set error to **false**
+--> Setup **nano::publish** object
+if NoErrorAndAtEndOfStream?
+-->[Yes] Validate incoming **block**
+
+note left
+Calls **nano::work_validate** against incoming block
+end note
+ if WorkValidated
+ 
+ -->[Yes] Publish Block
+ note right
+ Calls **udp_message_visitor.publish()** method. This in turn
+ executes the **udp_message_visitor.message()** method that 
+ passes a **nano::publish** object as an argument.
+ end note
+ end if
+else
+-->[No] Set status to **parse_status::invalid_publish_message**
+end if
+@enduml
