@@ -1,0 +1,37 @@
+@startuml
+
+title: nano::election::confirm_if_quorum
+
+(*) --> Get tallied results
+
+note right
+Call **nano::election::tally()** 
+-Method iterates over last votes and tally ledger weight for 
+block hashes.
+
+Tallied results returned an ordered hash (sorted by weight):
+
+**voted weight: block_hash**
+end note
+-left> Tally sum of all votes
+if SumOkAndBlockHashIsNotWinner?
+note right
+tallied **sum** must be >= **config online weight minimum** value
+end note
+-->[Yes] call node::block_processor::force on block
+--> Set status.winner = block
+--> Call update_dependent()
+--> Call node::active_transactions::adjust_difficulty on block
+end if
+
+--> call have_quorum()
+note right
+Compute and compare a node's peers' online stake with blocks
+tallied votes:
+
+**((online_reps.online_stake () / 100) * config.online_weight_quorum)**
+
+return **true** if quorum is met
+end note
+--> call confirm_once()
+@enduml

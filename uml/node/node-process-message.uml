@@ -1,0 +1,16 @@
+@startuml
+
+title nano::node::process_message
+
+(*)--> Setup **network_message_visitor** object
+--> Call **visit()** method on **nano::message** object
+note right
+Pass **network_message_visitor** ref argument
+
+End result:
+
+**network_message_visitor.publish()** method is called
+with ref to **nano::publish** message object.
+end note
+@enduml
+

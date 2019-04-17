@@ -1,0 +1,34 @@
+@startuml
+
+title: nano::transport::udp_channels::random_set
+
+(*)-->Setup unordered set **result**
+note right
+Set size of set to equal **count** argument passed to 
+method (Range 15 - 60)
+end note
+--> Get Lock
+--> Set **random_cutoff**
+note right
+Max attempts to add peers before giving up:
+
+**count** * 2 => (Range 30 - 120)
+end note
+
+--> Set **peers_size** = **channels.size()**
+if ChannelsIsNotEmpty then
+-->[True] Loop from 0 to **random_cutoff**
+note right
+Dynamically call **CryptoPP::AutoSeededRandomPool::GenerateWord32**
+and generate random keys into the **channels** set and dynamically
+select nodes. Continue up to **random_cutoff** value or until 
+**result.size()** == **count**
+
+end note
+--> Generate random seed as index
+--> Insert random channel entry into **result**
+end if
+
+--> Return **result**
+-->(*)
+@enduml

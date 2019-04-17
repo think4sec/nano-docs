@@ -1,0 +1,50 @@
+@startuml
+
+title: nano::election::publish
+
+(*) --> Set **result** to false
+if BlockQueueSizeBreachedThreshold
+note right
+Check if **blocks** queue size >= 10
+Check election tally for **block's hash**
+If tally of votes < node.online_reps.online_stake()/10,
+then bypass attempt to process block
+end note
+
+-->[Yes] Set **result** to true
+end if
+
+if Result
+-->[True] Begin read tx
+--> Validate current block by previous block
+note left
+Call **nano::node::validate_block_by_previous()**
+
+Returns **true**:
+Previous block does not exist
+
+Returns **false**:
+Account is new or
+Account not new and block contains valid signature 
+end note
+
+if Result
+->[True] Ensure block will be new root block
+-->Insert block into **blocks** queue
+-->call confirm_if_quorum()
+-->call node.network.flood_block
+note right
+Publish block to **sqrt(n)** peers
+
+Block publication is **sqrt(n)^t**
+
+n = total peers known to node
+t = time
+
+end note
+end if
+else
+-->[False](*)
+end if
+
+@enduml

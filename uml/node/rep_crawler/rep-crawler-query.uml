@@ -1,0 +1,32 @@
+@startuml
+
+title: nano::rep_crawler::query
+
+(*)-->Get random block from data store
+note right
+Call **node.store.block_random()** method to acquire a
+random block in the ledger.
+end note
+--> Add block hash to rep_crawler **active** queue
+note right
+The queue represent blocks node has requested for a peer to
+vote on, in order to add new node as a peer.
+end note
+--> Iterate over set of **channels** (peers)
+--> Call **on_rep_request()** method for each channel
+--> Create **nano::confirm_req** message object using **block**
+--> Send **message** to peer
+--> Allow up to 5 seconds for peer to respond
+if NoResponse
+-->[Yes] remove block's hash from set
+note left
+The **active** set represent random blocks pending response
+from peers. Peer identification by random lookup of
+blocks in ledger.
+end note
+-->(*)
+else
+-->(*)
+end if
+
+@enduml

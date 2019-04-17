@@ -8,10 +8,24 @@ if NoErrorAndAtEndOfStream?
 -->[Yes] Validate incoming **block**
 
 note left
-Calls **nano::work_validate** against incoming block
+Calls **nano::work_validate** against incoming block.
+
+**NOTE:** work_validate method is set to return **false** 
+if block's **work meets publishing threshold**, otherwise
+**true** if it does not.
+
 end note
  if WorkValidated
+ note right
+ Expected behavior is for **work_validate** to return **false**
+ thus resulting operation is **true**.
  
+ if (!nano::work_validate (*incoming.block))
+ {
+    visitor.publish (incoming);
+ }
+
+ end note
  -->[Yes] Publish Block
  note right
  Calls **udp_message_visitor.publish()** method. This in turn

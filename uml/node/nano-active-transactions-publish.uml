@@ -1,0 +1,33 @@
+@startuml
+
+title: nano::active_transactions::publish
+
+(*)--> Get Lock
+--> Find block qualified_root
+note right
+Lookup is done against the **roots** container.
+**roots** is a multi_index_container
+
+**roots.find (block_a->qualified_root ())**
+
+Return account's known **previous()** block 
+(otherwise **0** value) 
+
+end note
+
+if BlockHashNotLastKnownHash
+-->[True] Publish Block For Voting
+note right
+Calls **existing->election->publish(block_a)**
+end note
+
+ if NoElectionResult
+ -->[Yes] Insert Block Pending Election Result
+ note right
+ Block is inserted into **blocks** queue, pending election resul
+ end note
+end if
+@enduml
+
+--> Return status of result (**true**|**false**)
+-->(*)

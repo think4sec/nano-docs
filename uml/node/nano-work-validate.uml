@@ -1,0 +1,39 @@
+@startuml
+
+title nano::work_validate
+
+(*)--> Calls local **work_validate** overriden method
+note right
+**nano::block** ref passed with **nullptr** set for difficulty
+
+**nano::block.root()** and
+**nano::block.block_work()**
+
+are passed as arguments to **work_validate**
+end note
+
+-->work_validate(**overridden**)
+-> Load **nano::network_constants**
+-->Extract **work_value**
+note left
+Calls **nano::work_value** method with block's root and work
+passed as arguments
+end note
+
+if WorkValueLessThanThreshold
+note right
+
+**work_value** < **network_constants.publish_threshold**
+
+publish_threshold represents the following hex value: 
+
+test_network: **0xff00000000000000**
+prod_network: **0xffffffc000000000**
+
+end note
+-->[Yes] return **true**
+else
+-->[No] return **false**
+
+
+@enduml

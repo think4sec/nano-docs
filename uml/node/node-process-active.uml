@@ -1,0 +1,15 @@
+@startuml
+
+title: nano::node::process_active
+
+(*)--> Add Block Hash To Arrival Queue
+
+note right
+block_arrival.add (incoming->hash ());
+end note
+
+--> Add Block To Block Processor Queue
+note right
+block_processor.add (incoming, nano::seconds_since_epoch ());
+end note
+@enduml

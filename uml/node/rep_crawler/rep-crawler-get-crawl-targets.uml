@@ -1,0 +1,36 @@
+@startuml
+
+title: nano::rep_crawler::get_crawl_targets
+
+(*)-->Create Unordered Set **channels**
+--> Set **required_peer_count**
+note right
+Determine if weight is sufficient.
+Compare node's total weight to configuration file
+**online_weight_minimum** entry. 
+
+total_weight > online_weight_minimum: **required_peer_count** = 10
+total_weight < online_weight_minimum: **required_peer_count** = 40
+
+end note
+
+--> Request Lock
+-->Add list of known peers_with_weight to **channels** set
+note right
+Insert the channel by **hash** value of each communication channel into set 
+**channels**.
+end note
+-->Increase **required_peer_count**
+note right
+**required_peer_count** is increased by **1.5** times itself
+end note
+
+--> Get random peers
+note right
+Call **node::network::udp_channels::random_set(required_peer_count)**.
+Insert each entry into the vector **result**
+end note
+
+--> Return **result** vector
+-->(*)
+@enduml

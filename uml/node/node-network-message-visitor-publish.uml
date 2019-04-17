@@ -1,0 +1,36 @@
+@startuml
+
+title: nano::network_message_visitor::publish
+
+(*)--> if NetworkMessageLoggingEnabled?
+-->[Yes] Log **publish** message being processed
+--> Increment internal counters
+else
+-->[No] Increment internal counters
+end if
+
+if BlockProcessorFull?
+note right
+Node contains ref variable for **nano::block_processor** obj.
+
+Queue size is the summation of these two internal queues:
+
+**blocks.size () + state_blocks.size ()**
+
+Maximum growth size:
+
+**fast bootstrap**: 1048576
+**default bootstrap**: 65536
+
+end note
+-->[Yes] publish block to peers for a vote
+else
+-->[No] node.process_active()
+--> publish block to peers for a vote
+end if
+
+note left
+Call to **nano::active_transactions::publish** method with block as an
+argument. Method starts the block **election (voting)** process.
+end note
+@enduml

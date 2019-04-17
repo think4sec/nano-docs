@@ -27,7 +27,7 @@ partition ongoing_crawl() {
     -->[No] node.keepalive_preconfigured
 
     note left
-    Reach out to **preconfigured_peers** defined in config file
+    Send keepalive to **preconfigured_peers** defined in config file
     if sufficient weight is not seen by node.
     end note
     --> "Set timer expiration"

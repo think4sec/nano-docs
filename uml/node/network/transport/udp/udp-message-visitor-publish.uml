@@ -1,0 +1,23 @@
+@startuml
+
+title nano::udp_message_visitor::publish
+
+(*)--> Get peer's channel
+note right
+Find peer's existing channel
+
+Call **channel (node.network.udp_channels.channel (endpoint));**
+end note
+
+if ChannelExists
+-->[Yes] Update **last_packet_received** to current_timestamp
+--> Update peer's channel
+--> Process Message
+note right
+Call **node.process_message** and pass message recently sent 
+by peer along with their communication channel.
+end note
+else
+-->[No](*)
+end if
+@enduml
