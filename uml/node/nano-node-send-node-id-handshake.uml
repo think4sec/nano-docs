@@ -1,0 +1,29 @@
+@startuml
+
+skinparam ActivityFontSize 12
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+note right
+**query** refers to the **syn_cookie** created for new peer
+end note
+
+(*)--> Create node's **response**
+
+note right
+This **response** pair contains the following:
+
+<**node_public_id**, **node_signed_message**>
+end note
+
+-->Create **node_id_handshake** message object
+note right
+Encapsulate **query** and **response** into object
+end note
+
+--> Send **node_id_hanshake** message to peer
+
+-->(*)
+
+@enduml

@@ -6,7 +6,7 @@ title Nano Node
 
 Server --> Bootstrap
 Server--> Peering
-Server --> Quorum
+Server --> Election
 Server --> RPC/API
 Server --> Wallet
 

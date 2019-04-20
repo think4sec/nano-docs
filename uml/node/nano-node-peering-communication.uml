@@ -1,0 +1,44 @@
+@startuml
+
+skinparam ActivityFontSize 12
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+|Node|
+start
+
+:Read Configuration File;
+note left
+Read configuration entries such as:
+
+**peer_port**
+**preconfigured_peers**
+**online_weight_minimum**
+
+end note
+
+:Add initial peers;
+note left
+This only occurs if node contains list of peers discovered 
+last runtime.
+end note
+
+:Send **keepalive** to **preconfigured_peers**;
+
+|#LightGrey|Preconfigured Peer|
+:Check max ip connection for new peer;
+:Assign syn cookie to new peer;
+|Preconfigured Peer|
+:Send **node_id_handshake** message;
+|Node|
+:Process **node_id_handshake** message;
+|Preconfigured Peer|
+:Register communication channel for new peer;
+:Send **keepalive** message to new peer;
+:Store new peer;
+|Node|
+
+stop
+
+@enduml

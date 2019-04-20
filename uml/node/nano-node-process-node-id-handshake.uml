@@ -1,0 +1,37 @@
+@startuml
+
+skinparam ActivityFontSize 12
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> Extract message **query**
+-->Extract message **response**
+
+if ResponseIsSet
+-->[Yes] "Validate **syn_cookie**" 
+"Validate **syn_cookie**" -left> "Validate message siganture"
+"Validate message siganture" --> "Handshake not local"
+"Handshake not local" --> "Erase previous entries"
+note bottom
+Only remove entries containing same node id but different
+port.
+end note
+
+"Erase previous entries" --> "Record new communication **channel**"
+"Record new communication **channel**" --> "Update stats"
+else
+-->[No] Invalid message signature
+end if
+
+if NoExistingChannel
+-->[True] generate **syn_cookie** for peer
+--> send **node_id_handshake** message to peer
+--> "Update stats"
+else
+-->[False] "Update stats"
+end if
+
+"Update stats" -->(*)
+
+@enduml
