@@ -42,15 +42,24 @@ The image above depicts the basic process of initial peer discovery. The payload
 
 Subsequent request to **preconfigured\_peers** will only occur, if node has yet to identify peers with enough delegated weight that meets the node operators defined **online\_weight\_minimum** (_Default: **6x10^37 raw units**_) configuration.
 
-#### send node\_id\_handshake
+#### add\_initial\_peers  
 
+This method will validate and verify a node's previous known peers for reuse. Each previous known peer will go through the **node\_id\_handshake** process by means of sending a **keepalive** message.
+
+![nano-node-add-initial-peers]  
+
+New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers** to obtain a list of other peers. This internal process known as **ongoing_crawl** will reach out to all preconfigured peers and send a keepalive message. 
+
+##### node\_id\_handshake process
+
+###### send
 The **node\_id\_handshake** message contains two items. The first is a **query** item which is the **syn\_cookie** allocated by the peer. The second is a **response** hash pair which contains a reference to the peer's **node\_id** along with a signed message by the node.
 
 ![nano-node-send-node-handshake]
 
 Upon receiving this message, the node will execute it's own **node\_id\_handshake** handler method.
 
-#### process node\_id\_handshake
+###### process
 
 The handler method will extract the **query** and **response** values from the node\_id\_handshake message. Once values are extracted, handler will determine if message is from existing peer or new peer.
 
@@ -73,6 +82,7 @@ Finally record stats for this handshake occurrence. These steps are repeated for
 
 
 [nano-node-peering]: ./images/node/nano-node-peering.png
+[nano-node-add-initial-peers]: ./images/node/nano-node-add-initial-peers.png
 [nano-node-peering-communication]: ./images/node/nano-node-peering-communication.png
 [nano-node-send-node-handshake]: ./images/node/nano-node-send-node-id-handshake.png
 [nano-node-process-node-handshake]: ./images/node/nano-node-process-node-id-handshake.png
