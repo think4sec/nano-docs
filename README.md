@@ -1,7 +1,38 @@
 
 ![nano-node-peering]
 
-<br/>
+<br/>  
+
+1. [Purpose]()  
+2. [Definitions]()  
+	* [channel]()  
+	* [peer]()  
+	* [preconfigured\_peers]()  
+	* [raw\_units]()  
+	* [representative]()  
++ [Message Types]()  
+	* [confirm\_ack]()  
+		- [send]()
+		- [receive]()
+	* [confirm\_req]()  
+		- [send]()
+		- [receive]()
+	* [keepalive]()
+		- [send]()
+		- [receive]()
+	* [node\_id\_handshake]()  
+		- [send]()
+		- [receive]()
+	* [publish]()  
++ [Initial Peering]()
+	* [add\_initial\_peers]()  
+	* [rep\_crawler]()  
++ [Continous Peering]()
+	* [rep\_crawler thread]()
+	* [ongoing\_peer\_store]()
+	
+<br/>  
+
 ### Purpose
 
 This document is intended for anyone looking to understand the nano's peering architecture in an easy to digest format.  
@@ -9,24 +40,31 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 ### Definitions
 
->### **Channel**
+>### **channel**
 
 >_Channels represent the internal representation of an endpoint and it's port._
 
->### **Peer**  
+>### **peer**  
 >Represents the foundation of any distributed network. Peers in the nano network are responsible for replicating transaction blocks to other peers, such that each peer contain the same set of transaction blocks.
 
->### **Preconfigured_Peers**
+>### **preconfigured_peers**
 >_Represents a list of peers that aide in establishing a connection to identify peers a node can obtain distributed ledger._
 
->### **Raw Units**  
+>### **raw units**  
 >Nano contains a total circulating supply is approximately **1.33x10^37** raw units. General measurement is done in **NANO** which is 1x10^29 raw units (**_1 NANO_**).
 
->### **Representative**
+>### **representative**
 
 >_A representative is a type of peer that contains enough direct/indirect weight to vote on >incoming blocks._
 
 <br/>
+
+### Message Types
+#### confirm\_ack
+#### confirm\_req
+#### keepalive
+#### node\_id\_handshake
+#### publish  
 
 ### Initial Peering
 
