@@ -3,8 +3,8 @@
 
 <br/>  
 
-1. [Purpose]()  
-2. [Definitions]()  
++ [Purpose]()  
++ [Definitions]()  
 	* [channel]()  
 	* [peer]()  
 	* [preconfigured\_peers]()  
