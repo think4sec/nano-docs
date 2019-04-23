@@ -57,50 +57,48 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 >_A representative is a type of peer that contains enough direct/indirect weight to vote on >incoming blocks._
 
+>### **syn_cookies**
+>
+
 <br/>
 
-### Message Types
+### Message Types  
+
+Section covers the different message types currently used for peer communication. Each message type, is transported with an appropriate message header. The message header will contain the following; **version\_max**, **version\_using**, **version\_min**, **payload message type**, and **extension**.  
+
+
+**Supported payload message type**  
+
+| Type | Length | Description   
+--- | --- | ---  
+bulk\_pull | 0 |   
+bulk\_pull\_account | 0 |  
+bulk\_push | 0 |   
+frontier\_req | 0 |    
+keepalive | 0 |   
+
 #### confirm\_ack
 #### confirm\_req
 #### keepalive
-#### node\_id\_handshake
-#### publish  
+#### node\_id\_handshake  
 
-### Initial Peering
+The node\_id\_handshake allows for node's to uniquely identify one another. The message stores the following data:
 
-The peering process begins with the initial sending of keepalive messages to the default **preconfigured\_peer**, **_peers.nano.org_**. The node software uses the default peering port defined in the node's configuration file (**peering\_port: 7075**). This preconfigured peer functions as a default peer for new nodes. It provides the new node with a randomly selected set of it's own peers. This list serves as the catalyst for a new node to discover other peers participating in the network.
+| Item | Length | Description  
+--- | --- | ---
+query | 32 bytes | Reference syn_cookie created for peer
+response | 64 bytes | Hash containing node's public_id and signature  
 
-![nano-node-peering-communication]
-
-The image above depicts the basic process of initial peer discovery. The payload within the keepalive message will contain a list of randomly selected peers that the new peer can query for other peers. Once peers establish a communication channel for each other, subsequent keepalive messages will be sent periodically with list of randomly selected peers.
-
->**NOTE:**  
->  
->  preconfigured\_peers configuration entry is only read upon node bootup. Changes to this list will require a process restart to take effect.
-
-Subsequent request to **preconfigured\_peers** will only occur, if node has yet to identify peers with enough delegated weight that meets the node operators defined **online\_weight\_minimum** (_Default: **6x10^37 raw units**_) configuration.
-
-#### add\_initial\_peers  
-
-This method will validate and verify a node's previous known peers for reuse. Each previous known peer will go through the **node\_id\_handshake** process by means of sending a **keepalive** message.
-
-![nano-node-add-initial-peers]  
-
-New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers** to obtain a list of other peers. This internal process known as **ongoing_crawl** will reach out to all preconfigured peers and send a keepalive message. 
-
-##### node\_id\_handshake process
 
 ###### send
-The **node\_id\_handshake** message contains two items. The first is a **query** item which is the **syn\_cookie** allocated by the peer. The second is a **response** hash pair which contains a reference to the peer's **node\_id** along with a signed message by the node.
+
+Sending this message type, the node will first allocate a **syn\_cookie** for peer as well signature of message. This signature will be used to verify validity of message. Both **query** and **response** data are populated, before sending message to peer.
 
 ![nano-node-send-node-handshake]
 
-Upon receiving this message, the node will execute it's own **node\_id\_handshake** handler method.
+###### receive
 
-###### process
-
-The handler method will extract the **query** and **response** values from the node\_id\_handshake message. Once values are extracted, handler will determine if message is from existing peer or new peer.
-
+Receiving this message type, the handler will extract the **query** and **response** data from message payload.
 
 ![nano-node-process-node-handshake]
 
@@ -114,9 +112,34 @@ Once completed, a new communication channel is created and recorded for this pee
 
 If **non-existing peer**, assign a syn cookie for this endpoint and start the node handshake communication by sending peer a **node\_id\_handshake** message.
 
-Finally record stats for this handshake occurrence. These steps are repeated for each new peer.
+Finally record stats for this handshake occurrence.  
+
+#### publish  
+
+### Initial Peering
+
+The peering process starts by identifying and adding any existing peers stored in data store. If their are no existing peers, the internal process **rep\_crawler** will reach out to **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
+
+The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by sending a **keepalive** message (_See [keepalive]() message type above_). By design, keepalive messages will attempt to supply any peer with a random selection of it's own peers. Thus the sending of keepalive messages is the building blocks for nodes to establish a near complete list of peers. 
+
+The image below depicts the initial communication flow to preconfigured peers.
+ 
+![nano-node-peering-communication]
 
 
+>**NOTE:**  
+>  
+>  preconfigured\_peers configuration entry is only read upon node bootup. Changes to this list will require a process restart to take effect.
+
+The purpose of the **rep\_crawler** process is to establish communication with as many peers to meet the node's defined **online\_weight\_minimum** (_Default: **6x10^37 raw units**_).
+
+#### add\_initial\_peers  
+
+This method will validate and verify a node's previous known peers for reuse. Each previous known peer will go through the **node\_id\_handshake** process.
+
+![nano-node-add-initial-peers]  
+
+New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers** to obtain a list of other peers. This internal process known as **ongoing_crawl** will reach out to all preconfigured peers and send a keepalive message. 
 
 
 [nano-node-peering]: ./images/node/nano-node-peering.png
