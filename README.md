@@ -74,17 +74,17 @@ version_max | 1 byte | Max version of node
 version_using | 1 byte | Current version of node  
 version_min | 1 byte | Min version of node
 type | 1 byte | Hex code representation of payload message type.
- | | invalid = 0x0
- | | not\_a\_type = 0x1
- | | keepalive = 0x2
- | | publish = 0x3
- | | confirm\_req = 0x4
- | | confirm\_ack = 0x5
- | | bulk\_pull = 0x6
- | | bulk\_push = 0x7
- | | frontier\_req = 0x8
- | | node\_id\_handshake = 0x0a
- | | bulk\_pull\_account = 0x0b  
+ |  | invalid = 0x0
+ |  | not\_a\_type = 0x1
+ |  | keepalive = 0x2
+ |  | publish = 0x3
+ |  | confirm\_req = 0x4
+ |  | confirm\_ack = 0x5
+ |  | bulk\_pull = 0x6
+ |  | bulk\_push = 0x7
+ |  | frontier\_req = 0x8
+ |  | node\_id\_handshake = 0x0a
+ |  | bulk\_pull\_account = 0x0b  
  extensions | 2 bytes | <need to review further>  
  block\_type\_mask | 2 bytes | <need to review further>  
  
