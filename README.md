@@ -79,12 +79,39 @@ keepalive | 0 |
 
 #### confirm\_ack
 #### confirm\_req
-#### keepalive
+#### keepalive  
+
+Keepalive messages are used to send a nodes' related peers to other peers. Peers are randomly selected and packed into keepalive message object.
+
+The message contains the following data:
+
+| Member | Size | Description
+--- | --- | ---
+peers | 144 bytes | Array holding upto 8 nano::endpoint type objects
+
+Storage allocation: 
+
+(Total nano::endpoint object stored)*(ipv6\_addr\_len+port\_len) = Total size
+
+8 elements = Total stored nano::endpoint objects  
+16 bytes = ipv6\_addr\_len  
+2 bytes = port\_len  
+
+###### send  
+
+![nano-node-send-keepalive]  
+
+###### receive  
+
+The receive handler for keepalive messages will first check sending peer has not breached the node's threshold for max connections per ip (**max\_peers\_per\_ip** = 10). If breach occurs, stats are simply updated for received message. If breach does not occur, generate cookie and store for peer.   
+
+![nano-node-process-keepalive]  
+
 #### node\_id\_handshake  
 
 The node\_id\_handshake allows for node's to uniquely identify one another. The message stores the following data:
 
-| Item | Length | Description  
+| Member | Length | Description  
 --- | --- | ---
 query | 32 bytes | Reference syn_cookie created for peer
 response | 64 bytes | Hash containing node's public_id and signature  
@@ -94,7 +121,8 @@ response | 64 bytes | Hash containing node's public_id and signature
 
 Sending this message type, the node will first allocate a **syn\_cookie** for peer as well signature of message. This signature will be used to verify validity of message. Both **query** and **response** data are populated, before sending message to peer.
 
-![nano-node-send-node-handshake]
+![nano-node-send-node-handshake]  
+
 
 ###### receive
 
@@ -143,6 +171,8 @@ New nodes will simply have an empty list which would require it to establish com
 
 
 [nano-node-peering]: ./images/node/nano-node-peering.png
+[nano-node-send-keepalive]: ./images/node/nano-node-send-keepalive.png
+[nano-node-process-keepalive]: ./images/node/nano-node-process-keepalive.png
 [nano-node-add-initial-peers]: ./images/node/nano-node-add-initial-peers.png
 [nano-node-peering-communication]: ./images/node/nano-node-peering-communication.png
 [nano-node-send-node-handshake]: ./images/node/nano-node-send-node-id-handshake.png

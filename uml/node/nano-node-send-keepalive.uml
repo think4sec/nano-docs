@@ -1,0 +1,23 @@
+@startuml
+
+skinparam ActivityFontSize 12
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> Create Keepalive Message Object
+note right
+Represents **nano::keepalive** message  
+
+Contains the following members: **peers**
+end note
+--> Randomly Fill Peers Array In Message Object
+note right
+Select up to a total of **8** peers to broadcast.
+
+Array represents a storage for **nano::endpoint** objects.
+end note
+
+--> Send Message To Peer
+
+@enduml

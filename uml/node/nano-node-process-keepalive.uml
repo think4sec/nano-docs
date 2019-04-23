@@ -1,0 +1,33 @@
+@startuml
+
+skinparam ActivityFontSize 12
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> Deserialize Keepalive Message
+--> "Check Max Ip Connection For Peer"
+--> Generate Cookie For Peer
+note left
+Cookie is a random **32 bytes** long block
+end note
+
+if CookieGenerated
+-left>[yes] Send node_id_handshake message
+
+note top
+Cookie is sent to peer to complete handshake
+end note
+--> Fetch Peer Communication Channel
+ if existingChannelFound
+ -right>[yes]Send local keepalive message
+ -right> "Iterate over peers in message"
+ end if
+else
+-->[no] "Iterate over peers in message"
+end if
+
+"Iterate over peers in message" -right> "Create new endpoint"
+"Create new endpoint" --> Merge Peer
+"Iterate over peers in message" --> Update message stats
+@enduml
