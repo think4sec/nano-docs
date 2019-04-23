@@ -66,16 +66,41 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 Section covers the different message types currently used for peer communication. Each message type, is transported with an appropriate message header. The message header will contain the following; **version\_max**, **version\_using**, **version\_min**, **payload message type**, and **extension**.  
 
+Size of header is as follows:
 
-**Supported payload message type**  
-
-| Type | Length | Description   
+| Member | Size | Description
 --- | --- | ---  
-bulk\_pull | 0 |   
-bulk\_pull\_account | 0 |  
-bulk\_push | 0 |   
-frontier\_req | 0 |    
-keepalive | 0 |   
+version_max | 1 byte | Max version of node  
+version_using | 1 byte | Current version of node  
+version_min | 1 byte | Min version of node
+type | 1 byte | Hex code representation of payload message type.
+ | | invalid = 0x0
+ | | not\_a\_type = 0x1
+ | | keepalive = 0x2
+ | | publish = 0x3
+ | | confirm\_req = 0x4
+ | | confirm\_ack = 0x5
+ | | bulk\_pull = 0x6
+ | | bulk\_push = 0x7
+ | | frontier\_req = 0x8
+ | | node\_id\_handshake = 0x0a
+ | | bulk\_pull\_account = 0x0b  
+ extensions | 2 bytes | <need to review further>  
+ block\_type\_mask | 2 bytes | <need to review further>  
+ 
+Total size of header = **8 bytes**  
+
+Each message will contain a **header** member that can be used to set/fetch header related information. In addition, each message sent will send a **header\_magic\_number**, this value represents the network node is sending messages for. The size of this magic number is **2 bytes**.
+
+**Dynamic payload size based on type**  
+
+| Type | Min. | Max | Description   
+--- | --- | --- | --- 
+bulk\_pull | 0 | 0 | 
+bulk\_pull\_account | 0 | 0 | 
+bulk\_push | 0 | 0 | 
+frontier\_req | 0 | 0 
+keepalive | 0 | 0 | 
 
 #### confirm\_ack
 #### confirm\_req
@@ -96,6 +121,8 @@ Storage allocation:
 8 elements = Total stored nano::endpoint objects  
 16 bytes = ipv6\_addr\_len  
 2 bytes = port\_len  
+
+8\*(16+2) = **144 bytes**
 
 ###### send  
 
@@ -143,6 +170,15 @@ If **non-existing peer**, assign a syn cookie for this endpoint and start the no
 Finally record stats for this handshake occurrence.  
 
 #### publish  
+
+The publish message is core message type used for passing blocks to other peers.  
+
+This message contains the following members:  
+
+| Members | Size | Description
+--- | --- | ---  
+block | platform_dependent| Pointer to block
+
 
 ### Initial Peering
 
