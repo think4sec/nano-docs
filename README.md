@@ -64,7 +64,7 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 ### Message Types  
 
-Section covers the different message types currently used for peer communication. Each message type, is transported with an appropriate message header. The message header will contain the following; **version\_max**, **version\_using**, **version\_min**, **payload message type**, and **extension**.  
+Section covers the different message types currently used for peer communication. Each message type, contains an appropriate message header. The message header will contain the following; **version\_max**, **version\_using**, **version\_min**, **payload message type**, and **extension**.  
 
 Size of header is as follows:
 
@@ -153,7 +153,7 @@ Sending this message type, the node will first allocate a **syn\_cookie** for pe
 
 ###### receive
 
-Receiving this message type, the handler will extract the **query** and **response** data from message payload.
+The handler will deserialize message and use the **query** and **response** data. Message signature is check for validity, otherwise node will start node\_id\_handshake process with peer.
 
 ![nano-node-process-node-handshake]
 
@@ -165,7 +165,7 @@ If **existing peer**, verify the following:
 
 Once completed, a new communication channel is created and recorded for this peer, registering its address, port, and node_version.
 
-If **non-existing peer**, assign a syn cookie for this endpoint and start the node handshake communication by sending peer a **node\_id\_handshake** message.
+If **non-existing peer**, assign a syn cookie for this endpoint and start the node\_id\_handshake process sending a **node\_id\_handshake** message to peer.
 
 Finally record stats for this handshake occurrence.  
 
@@ -203,8 +203,15 @@ This method will validate and verify a node's previous known peers for reuse. Ea
 
 ![nano-node-add-initial-peers]  
 
-New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers** to obtain a list of other peers. This internal process known as **ongoing_crawl** will reach out to all preconfigured peers and send a keepalive message. 
+New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers** to obtain a list of other peers.  
 
+#### rep\_crawler  
+
+Rep\_crawler will run every **7 seconds** if node contains sufficient weight. Otherwise, run-time is every **3 seconds** until node has communicated with a sufficient amount of weighted peers. The total weight of it's peers must be greater than the **online\_weight\_minimum** configuration entry. 
+
+Upon each execution, rep\_crawler attempts to poll last known weighted peers prior to selecting a random set of peers. The size of random peers to poll range from **15** to **60**. This range is determined by a nodes' peer's weight. Once a random list of peers are chosen, each peer is polled and sent a **confirm\_req** message. This message will contain a random block selected from the ledger. Peers are given up to **5 seconds** to respond. If no response is given, block is simply removed from queue. 
+
+![nano-node-repcrawler-ongoing-crawl]
 
 [nano-node-peering]: ./images/node/nano-node-peering.png
 [nano-node-send-keepalive]: ./images/node/nano-node-send-keepalive.png
@@ -213,6 +220,7 @@ New nodes will simply have an empty list which would require it to establish com
 [nano-node-peering-communication]: ./images/node/nano-node-peering-communication.png
 [nano-node-send-node-handshake]: ./images/node/nano-node-send-node-id-handshake.png
 [nano-node-process-node-handshake]: ./images/node/nano-node-process-node-id-handshake.png
+[nano-node-repcrawler-ongoing-crawl]: ./images/node/rep\_crawler/rep-crawler.png
 
 
 

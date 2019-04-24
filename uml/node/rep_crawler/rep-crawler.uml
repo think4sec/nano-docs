@@ -1,0 +1,42 @@
+@startuml
+
+skinparam ActivityFontSize 12
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> Get current timestamp
+
+--> Get total peers weight
+note right
+Iterate and summate total weight of peers known thus far.
+end note
+
+-->Query weighted peers
+
+note left
+First, known weighted peers are added to queue for polling.
+
+Range of **15 - 60** weighted peers are randomly selected and 
+added to queue for polling.
+
+Each peer is sent a **confirm_req** message, populated with
+a random block from ledger
+end note
+
+if HasSufficientWeight
+->[No] Communicate with **preconfigured_peers**
+--> Update run-time
+note left
+Runtime interval is determined by total weight of peers.
+
+**3 seconds** if weight is < **online_weight_minimum**
+**7 seconds** if weight is > **online_weight_minimum**
+end note
+
+else
+-->[Yes] Update run-time
+end if
+
+-->(*)
+@enduml
