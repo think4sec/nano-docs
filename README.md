@@ -133,18 +133,23 @@ The message contains the following members:
 --- | --- | ---  
 header | 8 bytes | Message header
 block | &nbsp; | Block transaction
-roots\_hashes | 64*total pairs in set | A set of Blocks \<hash,root\>  
+roots\_hashes | 64*total pairs in set | A set of Block's \<hash,root\> pair. <br/>**hash** = digest of hashables in block. <br/>**root** = previous block or account number for open blocks
 
 ###### send  
 
 ###### receive
 
+The message will either contain the **block** or **roots_hashes** member populated. 
+
 ![nano-node-confirm-req-recv-overview]
 
-Contain Block
+**Contain Block**
 
-![nano-node-confirm-req-recv-contain-block]
-Contain Root Hashes
+![nano-node-confirm-req-recv-contain-block]  
+
+**Contain Root Hashes**  
+
+![nano-node-confirm-req-recv-contain-hashes]
 
 #### keepalive  
 
@@ -224,6 +229,15 @@ This message contains the following members:
 header | 8 bytes | Message header
 block | &nbsp;| Block transaction
 
+A block contains the following members:
+
+| Members | Size | Description
+--- | --- | ---  
+hashables | &nbsp; | Represents block's associated account (public key), <br/>previous hash in chain, account representative, balance, link field,<br/> size = <br/>(summation for sizeof account+previous+representative+balance+link)
+signature | 64 bytes | Represents signature of block
+work | 8 bytes | Reprsents compute work for block
+size | &nbsp; | represents summation for sizeof hashables+signature+work
+
 
 ### Initial Peering
 
@@ -259,6 +273,7 @@ Upon each execution, rep\_crawler attempts to poll last known weighted peers pri
 ![nano-node-repcrawler-ongoing-crawl]
 
 [nano-node-confirm-req-recv-contain-block]: ./images/node/nano-node-confirm-req-recv-contain-block.png
+[nano-node-confirm-req-recv-contain-hashes]: ./images/node/nano-node-confirm-req-recv-contain-hashes.png
 [nano-node-confirm-req-recv-overview]: ./images/node/nano-node-confirm-req-recv-overview.png
 [nano-node-peering]: ./images/node/nano-node-peering.png
 [nano-node-send-keepalive]: ./images/node/nano-node-send-keepalive.png

@@ -1,0 +1,43 @@
+@startuml
+
+skinparam ActivityFontSize 12
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> roots_hashes is not empty
+--> "Iterate over roots_hashes"
+-left> "Send Votes for **hash**"
+if Votes sent and block exists in ledger for **hash**
+    -->[True] Add block to local batch queue
+
+else 
+    -->[False] Get block successor for **root** hash
+    if Successor not found but account exists for **root** hash
+        -->[True] Get account for **root** hash
+        --> Update successor = **root** account's open block
+    end if
+    
+    if Successor is non-zero
+        -->[True] "Successor set"
+        
+        if SendVotes
+            -->[Send Votes Failed] Add block to local batch queue
+        end if
+        
+        "Successor set" --> "Get block for successor"
+        "Get block for successor" --> Publish block to peer
+        note right
+        Send peer a **publish** message with successor block
+        end note
+    end if
+end if
+
+"Iterate over roots_hashes" --> "Local batch queue not empty"
+"Local batch queue not empty" -->[True] Send **confirm_ack** message(s) to peer
+note bottom
+Iterate over wallets representatives and request a **vote**
+end note
+
+@enduml
+
