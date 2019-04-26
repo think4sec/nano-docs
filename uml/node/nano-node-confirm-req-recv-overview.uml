@@ -1,0 +1,20 @@
+@startuml
+
+skinparam ActivityFontSize 12
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> "Deserialize confirm_req message"
+--> Log message
+--> Increment inbound confirm_req message counter
+if Voting enabled And Wallets Representative Count > 0
+  -->[True] "Check Message"
+  "Check Message" --> "Contain Block"
+  "Check Message" --> "Contain root_hashes"
+  
+  "Contain Block" --> (*)
+  "Contain root_hashes" --> (*)
+end if
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+
+skinparam ActivityFontSize 12
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> Get Block Hash
+--> Send Votes
+note right
+Send votes cached for block hash if found
+end note
+
+if Votes were sent
+    -right>[True]Get block successor
+    note right
+    Block successor represents last known block
+    for block's associated account. 
+    end note
+    
+    if successor found
+        -->[True] Respond to peer with **confirm_ack** and/or **publish** message
+        note right
+        
+        Send **confirm_ack** messages to peer if votes for
+        block found in cache.
+        
+        And/Or
+        
+        if successor block hash !=  current block hash
+        
+        send **publish** message to peer
+        end note
+    else
+        -left>[False](*)
+    end if
+else
+    -->[False](*)
+end if
+@enduml

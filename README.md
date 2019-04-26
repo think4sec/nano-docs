@@ -102,16 +102,59 @@ bulk\_push | 0 | 0 |
 frontier\_req | 0 | 0 
 keepalive | 0 | 0 | 
 
-#### confirm\_ack
-#### confirm\_req
+#### confirm\_ack  
+
+The purpose of this message type is to send **votes** to other peers for specific blocks.
+
+The message contains the following members:  
+
+| Member | Size | Description
+--- | --- | ---  
+header | 8 bytes | Message header
+vote | &nbsp; | A set of votes  
+
+A vote object contains the following members:
+
+| Member | Size | Description
+--- | --- | ---  
+sequence | 8 bytes | Vote round sequence number
+blocks | &nbsp; | Blocks or Block Hashes vote intended for
+account | 32 bytes | Account that is voting  
+signature | 64 bytes | Signature of **sequence** + **blocks**
+hash_prefix | &nbsp; | &nbsp;
+
+#### confirm\_req  
+
+The purpose of this message type is to request **votes** from other peers for specific blocks. 
+
+The message contains the following members:  
+
+| Member | Size | Description
+--- | --- | ---  
+header | 8 bytes | Message header
+block | &nbsp; | Block transaction
+roots\_hashes | 64*total pairs in set | A set of Blocks \<hash,root\>  
+
+###### send  
+
+###### receive
+
+![nano-node-confirm-req-recv-overview]
+
+Contain Block
+
+![nano-node-confirm-req-recv-contain-block]
+Contain Root Hashes
+
 #### keepalive  
 
-Keepalive messages are used to send a nodes' related peers to other peers. Peers are randomly selected and packed into keepalive message object.
+The purpose of this message type is to send a set of a node's **peers** to other **peers**. Peers are randomly selected and packed into this message object.
 
 The message contains the following data:
 
 | Member | Size | Description
---- | --- | ---
+--- | --- | ---  
+header | 8 bytes | Message header
 peers | 144 bytes | Array holding upto 8 nano::endpoint type objects
 
 Storage allocation: 
@@ -139,7 +182,8 @@ The receive handler for keepalive messages will first check sending peer has not
 The node\_id\_handshake allows for node's to uniquely identify one another. The message stores the following data:
 
 | Member | Length | Description  
---- | --- | ---
+--- | --- | ---  
+header | 8 bytes | Message header
 query | 32 bytes | Reference syn_cookie created for peer
 response | 64 bytes | Hash containing node's public_id and signature  
 
@@ -171,13 +215,14 @@ Finally record stats for this handshake occurrence.
 
 #### publish  
 
-The publish message is core message type used for passing blocks to other peers.  
+This message type is used to **publish** blocks to network.
 
 This message contains the following members:  
 
 | Members | Size | Description
 --- | --- | ---  
-block | platform_dependent| Pointer to block
+header | 8 bytes | Message header
+block | &nbsp;| Block transaction
 
 
 ### Initial Peering
@@ -213,6 +258,8 @@ Upon each execution, rep\_crawler attempts to poll last known weighted peers pri
 
 ![nano-node-repcrawler-ongoing-crawl]
 
+[nano-node-confirm-req-recv-contain-block]: ./images/node/nano-node-confirm-req-recv-contain-block.png
+[nano-node-confirm-req-recv-overview]: ./images/node/nano-node-confirm-req-recv-overview.png
 [nano-node-peering]: ./images/node/nano-node-peering.png
 [nano-node-send-keepalive]: ./images/node/nano-node-send-keepalive.png
 [nano-node-process-keepalive]: ./images/node/nano-node-process-keepalive.png
