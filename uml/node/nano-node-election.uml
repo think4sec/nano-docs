@@ -1,0 +1,19 @@
+@startuml
+
+skinparam TitleFontSize 30
+skinparam ActivityFontSize 20
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+title nano-node
+
+(*)--> Server
+
+Server --> Bootstrap
+Server--> Peering
+Server --> Election/Quorum#LightBlue
+Server --> RPC/API
+Server --> Wallet
+
+@enduml
