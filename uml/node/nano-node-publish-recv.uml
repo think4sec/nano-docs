@@ -1,0 +1,41 @@
+@startuml
+
+skinparam TitleFontSize 30
+skinparam ActivityFontSize 20
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> "Deserialize publish message"
+if Block work valid?
+    -->[True] Process publish message
+    --> Log network message
+    note left
+    Log message if **network** logging enabled
+    end note
+    --> Increment stats for publish message
+    if BlockProcessorQueueFull
+        note right
+        Queue size dependent on **fast_bootstrap** being enabled
+        
+        **enabled**: 1048576 total entries
+        **disabled**: 65536 total entries
+        end note
+        -->[False] Process Block
+        --> Add block hash to **arrival** queue
+        --> Wrap block into unchecked_info object
+        --> Validate block work
+        --> Add block to **block_processor** queue
+        note right
+        Unchecked block is added if block hash not found 
+        in block_hashes set or rolled_back container
+        end note
+    else
+        -->[True] Check election block election
+    end if
+else
+    -->[False] Insufficient work
+end if
+
+@enduml
+

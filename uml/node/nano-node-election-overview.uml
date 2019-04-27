@@ -1,0 +1,34 @@
+@startuml
+
+skinparam TitleFontSize 30
+skinparam ActivityFontSize 20
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> Node
+
+"Peers"#LightBlue -down>[publish block message] "Packet Processor Threads"
+Node -left> "Packet Processor Threads"#LightGreen
+
+Clients#LightBlue -down>[block_create] "RPC/API"#LightGreen
+
+Node -right>"RPC/API"
+Node --> Block Processor
+
+"Packet Processor Threads" --> "Receive Action"
+"Receive Action" --> "Deserialize Buffer"
+"Deserialize Buffer" --> "Deserialize Publish Message"
+"Deserialize Publish Message" -right> "Block Processor"
+"Deserialize Publish Message" --> "Active Tx Publish"
+"Active Tx Publish" -> "Start Election"
+
+-->Publish Block For Vote
+note left
+Publish block to random set of sqrt(total_peers) peers
+end note
+-->Tally votes
+-->Quorum
+-->Add confirmation height
+
+@enduml
