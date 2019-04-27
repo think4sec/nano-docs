@@ -30,6 +30,7 @@
 + [Continous Peering]()
 	* [rep\_crawler thread]()
 	* [ongoing\_peer\_store]()
+* [Cost]()
 	
 <br/>  
 
@@ -239,6 +240,11 @@ work | 8 bytes | Reprsents compute work for block
 size | &nbsp; | represents summation for sizeof hashables+signature+work
 
 
+###### send  
+###### receive  
+
+![nano-node-publish-recv]
+
 ### Initial Peering
 
 The peering process starts by identifying and adding any existing peers stored in data store. If their are no existing peers, the internal process **rep\_crawler** will reach out to **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
@@ -272,9 +278,26 @@ Upon each execution, rep\_crawler attempts to poll last known weighted peers pri
 
 ![nano-node-repcrawler-ongoing-crawl]
 
+### Cost  
+
+Network cost summary
+
+2 bytes will be added for magic number (network identification)  
+8 bytes will be added for header size
+
+| Message | Size | Total
+--- | ---  | ---
+confirm\_ack | Min: 168 bytes, Max: TBD  | Min: 178 bytes, Max: TBD
+confirm\_req | &nbsp; | &nbsp;
+keepalive | 144 bytes | 154 bytes
+node\_id\_handshake | 96 bytes | 108 bytes
+publish | &nbsp; | &nbsp;
+
+
 [nano-node-confirm-req-recv-contain-block]: ../images/node/nano-node-confirm-req-recv-contain-block.png
 [nano-node-confirm-req-recv-contain-hashes]: ../images/node/nano-node-confirm-req-recv-contain-hashes.png
 [nano-node-confirm-req-recv-overview]: ../images/node/nano-node-confirm-req-recv-overview.png
+[nano-node-publish-recv]: ../images/node/nano-node-publish-recv.png
 [nano-node-peering]: ../images/node/nano-node-peering.png
 [nano-node-send-keepalive]: ../images/node/nano-node-send-keepalive.png
 [nano-node-process-keepalive]: ../images/node/nano-node-process-keepalive.png
