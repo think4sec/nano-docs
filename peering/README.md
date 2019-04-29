@@ -307,7 +307,7 @@ Frequency is in seconds
 | Message | Size | Frequency | Total
 --- | ---  | --- | --- | ---
 confirm\_ack | 168 bytes -- ?  | &nbsp; | 178 bytes -- ?
-confirm\_req | 280 bytes -- ? | &nbsp; | &nbsp;
+confirm\_req | (64 or 216) bytes -- ? | &nbsp; | (74 or 226) bytes -- ?
 keepalive | 144 bytes | Min: 3, Max: 7 | 154 bytes
 node\_id\_handshake | 96 bytes | &nbsp; | 108 bytes
 publish | 216 bytes | &nbsp; | 226 bytes 
