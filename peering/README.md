@@ -304,8 +304,8 @@ Network cost summary
 
 Frequency is in seconds  
 
-| Message | Size | Frequency | Total
---- | ---  | --- | --- | ---
+| Message | Size | Frequency | Total  
+--- | ---  | --- | --- 
 confirm\_ack | 168 bytes -- ?  | &nbsp; | 178 bytes -- ?
 confirm\_req | (64 or 216) bytes -- ? | &nbsp; | (74 or 226) bytes -- ?
 keepalive | 144 bytes | Min: 3, Max: 7 | 154 bytes
