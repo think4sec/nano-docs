@@ -31,7 +31,7 @@ if Block work valid?
         in block_hashes set or rolled_back container
         end note
     else
-        -->[True] Check election block election
+        -->[True] Check block election
     end if
 else
     -->[False] Insufficient work

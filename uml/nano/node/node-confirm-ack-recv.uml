@@ -1,0 +1,42 @@
+@startuml
+
+skinparam TitleFontSize 30
+skinparam ActivityFontSize 20
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*)--> Deserialize confirm_ack message
+
+--> Log Message
+note left
+Log message if **network** logged enabled
+end note
+
+--> Increment stats for **confirm_ack** message
+--> "Iterate over blocks or block_hashes"
+-left> Instantiate **block** object
+if BlockProcessorNotFull
+    -->[True] Add block to block_processor queue
+    note bottom
+    Block hash is also added to arrival list with current
+    timestamp.
+    end note
+    -right> "Store blocks pending election result"
+else
+    -right>[False] "Store blocks pending election result"
+end if
+
+"Store blocks pending election result" -up> "Add vote to queue"
+"Iterate over blocks or block_hashes" --> "Add vote to queue"#LightGreen
+note right
+Throttle vote processing. Limit vote addition to queue 
+based on the following criteria:
+
+size < **98304** && regardless rep found or not
+size < **114688** && rep found
+size < **131072** && rep found
+size < **147456** && rep found
+end note
+-->(*)
+@enduml

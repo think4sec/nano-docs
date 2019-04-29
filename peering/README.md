@@ -112,7 +112,7 @@ The message contains the following members:
 | Member | Size | Description
 --- | --- | ---  
 header | 8 bytes | Message header
-vote | &nbsp; | A set of votes  
+vote | &nbsp; | A nano::vote object  
 
 A vote object contains the following members:
 
@@ -123,6 +123,12 @@ blocks | &nbsp; | Blocks or Block Hashes vote intended for
 account | 32 bytes | Account that is voting  
 signature | 64 bytes | Signature of **sequence** + **blocks**
 hash_prefix | &nbsp; | &nbsp;
+
+###### send  
+
+###### receive  
+
+![nano-node-confirm-ack-recv]  
 
 #### confirm\_req  
 
@@ -234,7 +240,7 @@ A block contains the following members:
 
 | Members | Size | Description
 --- | --- | ---  
-hashables | &nbsp; | Represents block's associated account (public key), <br/>previous hash in chain, account representative, balance, link field,<br/> size = <br/>(summation for sizeof account+previous+representative+balance+link)
+hashables | **account** = 32 bytes<br/>**previous** = 32 bytes<br/>**representative** = 32 bytes<br/>**balance** = 16 bytes<br/>**link** = 32 bytes<br/> | Represents block's associated account, <br/>previous hash in chain, account representative, balance, link field,<br/> size = <br/>(summation for sizeof account+previous+representative+balance+link).
 signature | 64 bytes | Represents signature of block
 work | 8 bytes | Reprsents compute work for block
 size | &nbsp; | represents summation for sizeof hashables+signature+work
@@ -294,6 +300,7 @@ node\_id\_handshake | 96 bytes | 108 bytes
 publish | &nbsp; | &nbsp;
 
 
+[nano-node-confirm-ack-recv]: ../images/node/nano-node-confirm-ack-recv.png
 [nano-node-confirm-req-recv-contain-block]: ../images/node/nano-node-confirm-req-recv-contain-block.png
 [nano-node-confirm-req-recv-contain-hashes]: ../images/node/nano-node-confirm-req-recv-contain-hashes.png
 [nano-node-confirm-req-recv-overview]: ../images/node/nano-node-confirm-req-recv-overview.png
