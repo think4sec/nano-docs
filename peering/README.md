@@ -119,10 +119,10 @@ A vote object contains the following members:
 | Member | Size | Description
 --- | --- | ---  
 sequence | 8 bytes | Vote round sequence number
-blocks | &nbsp; | Blocks or Block Hashes vote intended for
+blocks | (Min: 32 bytes, Max: 216 bytes) x _n_ | Blocks or Block Hashes vote intended for
 account | 32 bytes | Account that is voting  
 signature | 64 bytes | Signature of **sequence** + **blocks**
-hash_prefix | &nbsp; | &nbsp;
+hash_prefix | 32 bytes | &nbsp;
 
 ###### send  
 
@@ -139,8 +139,8 @@ The message contains the following members:
 | Member | Size | Description
 --- | --- | ---  
 header | 8 bytes | Message header
-block | &nbsp; | Block transaction
-roots\_hashes | 64*total pairs in set | A set of Block's \<hash,root\> pair. <br/>**hash** = digest of hashables in block. <br/>**root** = previous block or account number for open blocks
+block | 216 bytes | See block definition in [publish]() section
+roots\_hashes | 64*_n_ | A set of _n_ \<hash,root\> pairs. <br/>**hash** = digest of hashables in block. <br/>**root** = previous block or account number for open blocks
 
 ###### send  
 
@@ -234,7 +234,7 @@ This message contains the following members:
 | Members | Size | Description
 --- | --- | ---  
 header | 8 bytes | Message header
-block | &nbsp;| Block transaction
+block | 216 bytes| Block transaction
 
 A block contains the following members:
 
@@ -242,9 +242,10 @@ A block contains the following members:
 --- | --- | ---  
 hashables | **account** = 32 bytes<br/>**previous** = 32 bytes<br/>**representative** = 32 bytes<br/>**balance** = 16 bytes<br/>**link** = 32 bytes<br/> | Represents block's associated account, <br/>previous hash in chain, account representative, balance, link field,<br/> size = <br/>(summation for sizeof account+previous+representative+balance+link).
 signature | 64 bytes | Represents signature of block
-work | 8 bytes | Reprsents compute work for block
-size | &nbsp; | represents summation for sizeof hashables+signature+work
+work | 8 bytes | Represents compute work for block
 
+
+Total block size is: **216** bytes  
 
 ###### send  
 ###### receive  
@@ -291,13 +292,15 @@ Network cost summary
 2 bytes will be added for magic number (network identification)  
 8 bytes will be added for header size
 
-| Message | Size | Total
---- | ---  | ---
-confirm\_ack | Min: 168 bytes, Max: TBD  | Min: 178 bytes, Max: TBD
-confirm\_req | &nbsp; | &nbsp;
-keepalive | 144 bytes | 154 bytes
-node\_id\_handshake | 96 bytes | 108 bytes
-publish | &nbsp; | &nbsp;
+Frequency is in seconds  
+
+| Message | Size | Frequency | Total
+--- | ---  | --- | --- | ---
+confirm\_ack | 168 bytes -- ?  | &nbsp; | 178 bytes -- ?
+confirm\_req | 280 bytes -- ? | &nbsp; | &nbsp;
+keepalive | 144 bytes | Min: 3, Max: 7 | 154 bytes
+node\_id\_handshake | 96 bytes | &nbsp; | 108 bytes
+publish | 216 bytes | &nbsp; | 226 bytes 
 
 
 [nano-node-confirm-ack-recv]: ../images/node/nano-node-confirm-ack-recv.png
