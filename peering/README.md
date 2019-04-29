@@ -247,6 +247,16 @@ work | 8 bytes | Represents compute work for block
 
 Total block size is: **216** bytes  
 
+Hashables:
+
+| Members | Size | Description
+--- | --- | ---
+account | 32 bytes | Source account for block transaction
+previous | 32 bytes | Previous block transaction for account
+representative | 32 bytes | Account handling votes on source account behalf
+balance | 16 bytes | Balance of source account
+link | 32 bytes | Multi-usage: (when)<br/>**sending** = destination account<br/>**receiving** = source block hash from senders account
+
 ###### send  
 ###### receive  
 
