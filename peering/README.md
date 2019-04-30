@@ -118,16 +118,6 @@ Total size of header = **8 bytes**
 
 Each message will contain a **header** member that can be used to set/fetch header related information. In addition, each message sent will send a **header\_magic\_number**, this value represents the network node is sending messages for. The size of this magic number is **2 bytes**.
 
-**Dynamic payload size based on type**  
-
-| Type | Min. | Max | Description   
---- | --- | --- | --- 
-bulk\_pull | 0 | 0 | 
-bulk\_pull\_account | 0 | 0 | 
-bulk\_push | 0 | 0 | 
-frontier\_req | 0 | 0 
-keepalive | 0 | 0 | 
- 
 #### <a name="confirm-ack"></a>confirm\_ack  
 
 The purpose of this message type is to send **votes** to other peers for specific blocks.
