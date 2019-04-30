@@ -5,11 +5,11 @@
 
 + [Purpose]()  
 + [Definitions]()  
-	* [channel]()  
-	* [peer]()  
-	* [preconfigured\_peers]()  
-	* [raw\_units]()  
-	* [representative]()   
+	* [channel](#channel)  
+	* [peer](#peer)  
+	* [preconfigured\_peers](#preconfigured-peers)  
+	* [raw\_units](#raw-units)  
+	* [representative](#representative)   
 + [Peering](#peering)
 	* [add\_initial\_peers][add-initial-peers]  
 	* [rep\_crawler][rep-crawler]  
@@ -29,25 +29,26 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 ### Definitions
 
->### **channel**
+>### <a name="channel"></a>**channel**
 
->_Channels represent the internal representation of an endpoint and it's port._
+>_Channels represent the internal representation of an endpoint and it's port. Although no internal message sub-system exists, the nature of channels is very similar to common messaging systems._
 
->### **peer**  
->Represents the foundation of any distributed network. Peers in the nano network are responsible for replicating transaction blocks to other peers, such that each peer contain the same set of transaction blocks.
+>### <a name="peer"></a>**peer**  
+>_Represents the foundation of any distributed network. Peers in the nano network are responsible for replicating transaction blocks to other peers, such that each peer contain the same set of transaction blocks._
 
->### **preconfigured_peers**
+>### <a name="preconfigured-peers"></a>**preconfigured_peers**
 >_Represents a list of peers that aide in establishing a connection to identify peers a node can obtain distributed ledger._
 
->### **raw units**  
->Nano contains a total circulating supply is approximately **1.33x10^37** raw units. General measurement is done in **NANO** which is 1x10^29 raw units (**_1 NANO_**).
+>### <a name="raw-units"></a>**raw units**  
+>_Nano contains a total circulating supply is approximately **1.33x10^37** raw units. General measurement is done in **NANO** which is 1x10^29 raw units (**1 NANO**)._
 
->### **representative**
+>### <a name="representative"></a>**representative**
 
 >_A representative is a type of peer that contains enough direct/indirect weight to vote on >incoming blocks._
 
->### **syn_cookies**
+>### <a name="syn-cookies"></a>**syn_cookies**
 >
+>_Are used to internal identify valid peers a node has established communication with._
 
 <br/>
 
