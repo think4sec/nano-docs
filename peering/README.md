@@ -56,7 +56,7 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers](add-initial-peers)**. If node contains no existing peers, the internal process **[rep\_crawler](rep-crawler)** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
 
-The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **keepalive** message (_See [keepalive](keepalive) message type_) to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
+The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **[keepalive][keepalive]** message to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
 
 By design, a node receiving a keepalive message will identify if peer is already known. In cases where peer is unknown, node starts up the **[node\_id\_handshake](node-id-handshake)** process with new peer. Once process completes, node will respond with it's own keepalive message. 
 
@@ -324,14 +324,16 @@ node\_id\_handshake | 96 bytes | &nbsp; | 106 bytes
 publish | 216 bytes | &nbsp; | 226 bytes 
 
 
-[add-initial-peers]: ?#add-initial-peers
-[keepalive]: ?#keepalive
-[node-id-handshake]: ?#node-id-handshake  
-[rep-crawler]: ?#rep-crawler
-[confirm-ack]: ?#confirm-ack
-[confirm-req]: ?#confirm-req
-[publish]: ?#publish
-[message-types]: ?#message-types
+[peering]: /peering/?#peering
+[add-initial-peers]: /peering/?#add-initial-peers
+[keepalive]: /peering/?#keepalive
+[node-id-handshake]: /peering/?#node-id-handshake  
+[rep-crawler]: /peering/?#rep-crawler
+[confirm-ack]: /peering/?#confirm-ack
+[confirm-req]: /peering/?#confirm-req
+[publish]: /peering/?#publish
+[message-types]: /peering/?#message-types
+[cost]: /peering/?#cost
 
 [nano-node-confirm-ack-recv]: ../images/node/nano-node-confirm-ack-recv.png
 [nano-node-confirm-req-recv-contain-block]: ../images/node/nano-node-confirm-req-recv-contain-block.png
