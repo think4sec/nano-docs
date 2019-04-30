@@ -10,16 +10,16 @@
 	* [preconfigured\_peers]()  
 	* [raw\_units]()  
 	* [representative]()   
-+ [Peering](?#peering)
-	* [add\_initial\_peers](?#add_initial_peers)  
-	* [rep\_crawler](?#rep_crawler)  
-+ [Message Types](?#message_types)  
-	* [confirm\_ack](?#confirm_ack)  
-	* [confirm\_req](?#confirm_req)  
-	* [keepalive](?#keepalive)
-	* [node\_id\_handshake](?#node_id_handshake)  
-	* [publish](?#publish) 
-* [Cost](?#cost)
++ [Peering](/?#peering)
+	* [add\_initial\_peers](/?#add_initial_peers)  
+	* [rep\_crawler](/?#rep_crawler)  
++ [Message Types](/?#message_types)  
+	* [confirm\_ack](/?#confirm_ack)  
+	* [confirm\_req](/?#confirm_req)  
+	* [keepalive](/?#keepalive)
+	* [node\_id\_handshake](/?#node_id_handshake)  
+	* [publish](/?#publish) 
+* [Cost](/?#cost)
 <br/> 
  
 ### Purpose
@@ -54,11 +54,11 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 ### Peering
 
-The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers](?#add\_initial\_peers)**. If node contains no existing peers, the internal process **[rep\_crawler](?#rep\_crawler)** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
+The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers](/?#add\_initial\_peers)**. If node contains no existing peers, the internal process **[rep\_crawler](/?#rep\_crawler)** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
 
-The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **keepalive** message (_See [keepalive](?#keepalive) message type_) to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
+The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **keepalive** message (_See [keepalive](/?#keepalive) message type_) to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
 
-By design, a node receiving a keepalive message will identify if peer is already known. In cases where peer is unknown, node starts up the **[node\_id\_handshake](?#node_id_handshake)** process with new peer. Once process completes, node will respond with it's own keepalive message. 
+By design, a node receiving a keepalive message will identify if peer is already known. In cases where peer is unknown, node starts up the **[node\_id\_handshake](/?#node_id_handshake)** process with new peer. Once process completes, node will respond with it's own keepalive message. 
 
 The image below depicts the general communication flow to preconfigured peers.
  
