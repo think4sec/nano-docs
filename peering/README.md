@@ -10,7 +10,7 @@
 	* [preconfigured\_peers]()  
 	* [raw\_units]()  
 	* [representative]()   
-+ [Peering]("#peering")
++ [Peering](?#peering)
 	* [add\_initial\_peers]()  
 	* [rep\_crawler]()  
 + [Message Types]()  
@@ -60,13 +60,9 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 <br/>
 
-  
-
-![nano-node-publish-recv]
-
-<div id="peering">
+<div id="peering"/>
 ### Peering
-</div>
+
 The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers]()**. If node contains no existing peers, the internal process **[rep\_crawler]()** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
 
 The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **keepalive** message (_See [keepalive]() message type above_) to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
@@ -299,6 +295,8 @@ link | 32 bytes | Multi-usage: (when)<br/>**sending** = destination account<br/>
 
 ###### send  
 ###### receive 
+
+![nano-node-publish-recv]  
 
 ### Cost  
 
