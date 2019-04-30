@@ -56,9 +56,11 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers][add-initial-peers]**. If node contains no existing peers, the internal process **[rep\_crawler][rep-crawler]** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
 
-The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **[keepalive][keepalive]** message to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
+The default preconfigured\_peer defined is **_peers.nano.org_** . The node starts by sending a **[keepalive][keepalive]** message to each this peer. Node will run idle until preconfigured peers respond with it's own keepalive message.
 
-By design, a node receiving a keepalive message will identify if peer is already known. In cases where peer is unknown, node starts up the **[node\_id\_handshake][node-id-handshake]** process with new peer. Once process completes, node will respond with it's own keepalive message. 
+> Keepalive messages are the backbone for nodes to share peer relationships. Each message sent will contain a dynamic list of peers known to node. See [keepalive][keepalive] section for additional information.
+
+By design, a node receiving a keepalive message will identify if peer is already known. In the instance where a peer is unknown, a node will start the **[node\_id\_handshake][node-id-handshake]** process. Once process completes, node will send a keepalive message to new peer.
 
 The image below depicts the general communication flow to preconfigured peers.
  
@@ -69,9 +71,9 @@ The image below depicts the general communication flow to preconfigured peers.
 >  
 >  preconfigured\_peers configuration entry is only read upon node bootup. Changes to this list will require a process restart to take effect.
 
-Given nodes operate is a geo-distributed environment (internet), peers can become stale (peers no longer online, etc..). In order to avoid staleness of peers, the list of peers is refreshed automatically every **300 seconds**. The refresh process consists of removing all stored peer data from data store, iterating over active communication channels, extracting associated endpoint, and committing them to data store.
+Given nodes operate is a geo-distributed environment (internet), peers can become stale (peers no longer online, etc..). In order to avoid staleness of peers, the list of peers is refreshed automatically every **300 seconds**. The refresh process consists of removing all stored peer data from data store, iterating over active communication channels, extracting associated endpoint, and committing them to the data store.
 
-This process is repeated for the life of the node. The following contains a review of these core internal processes.  
+This process is repeated for the life of the node. The following sections attempts to describe the core internal processes related to peering.
 
 #### <a name="add-initial-peers"></a>add\_initial\_peers  
 
@@ -79,7 +81,7 @@ This method will validate and verify a node's previous known peers for reuse. Ea
 
 ![nano-node-add-initial-peers]  
 
-New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers**.  
+New nodes will simply have an empty list which would require it to establish communication with the list of preconfigured\_peers.  
 
 #### <a name="rep-crawler"></a>rep\_crawler  
 
