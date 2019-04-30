@@ -58,7 +58,7 @@ The peering process starts by identifying and adding any existing peers stored i
 
 The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **keepalive** message (_See [keepalive](?#keepalive) message type_) to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
 
-By design, a node receiving a keepalive message will identify if peer is already known. In cases where peer is unknown, node starts up the **node\_id\_handshake** process with new peer. Once process completes, node will respond with it's own keepalive message. 
+By design, a node receiving a keepalive message will identify if peer is already known. In cases where peer is unknown, node starts up the **[node\_id\_handshake](?#node_id_handshake)** process with new peer. Once process completes, node will respond with it's own keepalive message. 
 
 The image below depicts the general communication flow to preconfigured peers.
  
@@ -73,7 +73,8 @@ Given nodes operate is a geo-distributed environment (internet), peers can becom
 
 This process is repeated for the life of the node. The following contains a review of these core internal processes.  
 
-<div id="add_initial_peers"></div>
+<div id="add_initial_peers"></div>  
+
 #### add\_initial\_peers  
 
 This method will validate and verify a node's previous known peers for reuse. Each previous known peer will go through the **node\_id\_handshake** process.
@@ -82,7 +83,8 @@ This method will validate and verify a node's previous known peers for reuse. Ea
 
 New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers**.  
 
-<div id="rep_crawler"></div>
+<div id="rep_crawler"></div>  
+
 #### rep\_crawler  
 
 Rep\_crawler will run every **7 seconds** if node contains sufficient weight (_**delegated+peers online weight**_). Otherwise, run-time is every **3 seconds** until node has communicated with enough peers to satisfy sufficient weight requirement. The sufficient weight must be greater than the **online\_weight\_minimum** (_Default: **6x10^37 raw units**_) configuration entry. 
@@ -91,7 +93,8 @@ Upon each execution, rep\_crawler attempts to build a list of peers to poll. It 
 
 ![nano-node-repcrawler-ongoing-crawl]  
 
-<div id="message_types"></div>
+<div id="message_types"></div>  
+
 ### Message Types  
 
 Section covers the different message types currently used for peer communication. Each message type, contains an appropriate message header. The message header will contain the following; **version\_max**, **version\_using**, **version\_min**, **payload message type**, and **extension**.  
