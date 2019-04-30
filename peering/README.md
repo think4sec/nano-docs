@@ -28,9 +28,8 @@
 		- [receive]()
 	* [publish]() 
 * [Cost]()
-	
-<br/>  
-
+<br/> 
+ 
 ### Purpose
 
 This document is intended for anyone looking to understand the nano's peering architecture in an easy to digest format.  
@@ -59,8 +58,8 @@ This document is intended for anyone looking to understand the nano's peering ar
 >
 
 <br/>
+<div id="peering"/></div>
 
-<div id="peering"/>
 ### Peering
 
 The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers]()**. If node contains no existing peers, the internal process **[rep\_crawler]()** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
