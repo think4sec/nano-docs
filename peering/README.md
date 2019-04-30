@@ -10,7 +10,7 @@
 	* [preconfigured\_peers]()  
 	* [raw\_units]()  
 	* [representative]()   
-+ [Peering](peering)
++ [Peering](#peering)
 	* [add\_initial\_peers][add-initial-peers]  
 	* [rep\_crawler][rep-crawler]  
 + [Message Types][message-types]  
@@ -306,8 +306,6 @@ keepalive | 144 bytes | Min: 3, Max: 7 | 154 bytes
 node\_id\_handshake | 96 bytes | &nbsp; | 106 bytes
 publish | 216 bytes | &nbsp; | 226 bytes 
 
-
-[peering]: #peering
 [add-initial-peers]: #add-initial-peers
 [keepalive]: #keepalive
 [node-id-handshake]: #node-id-handshake  
