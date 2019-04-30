@@ -19,7 +19,7 @@
 	* [keepalive][keepalive]
 	* [node\_id\_handshake][node-id-handshake]
 	* [publish][publish] 
-* [Cost](cost)
+* [Cost][cost]
 <br/> 
  
 ### Purpose
