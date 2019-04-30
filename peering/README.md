@@ -50,9 +50,8 @@ This document is intended for anyone looking to understand the nano's peering ar
 >
 
 <br/>
-<div id="peering"/></div>
 
-### Peering
+### <a name="peering"></a>Peering
 
 The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers](add-initial-peers)**. If node contains no existing peers, the internal process **[rep\_crawler](rep-crawler)** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
 
@@ -73,9 +72,7 @@ Given nodes operate is a geo-distributed environment (internet), peers can becom
 
 This process is repeated for the life of the node. The following contains a review of these core internal processes.  
 
-<div id="add-initial-peers"></div>  
-
-#### add\_initial\_peers  
+#### <a name="add-initial-peers"></a>add\_initial\_peers  
 
 This method will validate and verify a node's previous known peers for reuse. Each previous known peer will go through the **node\_id\_handshake** process.
 
@@ -83,9 +80,7 @@ This method will validate and verify a node's previous known peers for reuse. Ea
 
 New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers**.  
 
-<div id="rep-crawler"></div>  
-
-#### rep\_crawler  
+#### <a name="rep-crawler"></a>rep\_crawler  
 
 Rep\_crawler will run every **7 seconds** if node contains sufficient weight (_**delegated+peers online weight**_). Otherwise, run-time is every **3 seconds** until node has communicated with enough peers to satisfy sufficient weight requirement. The sufficient weight must be greater than the **online\_weight\_minimum** (_Default: **6x10^37 raw units**_) configuration entry. 
 
@@ -93,9 +88,7 @@ Upon each execution, rep\_crawler attempts to build a list of peers to poll. It 
 
 ![nano-node-repcrawler-ongoing-crawl]  
 
-<div id="message-types"></div>  
-
-### Message Types  
+### <a name="message-types"></a>Message Types  
 
 Section covers the different message types currently used for peer communication. Each message type, contains an appropriate message header. The message header will contain the following; **version\_max**, **version\_using**, **version\_min**, **payload message type**, and **extension**.  
 
@@ -134,10 +127,8 @@ bulk\_pull\_account | 0 | 0 |
 bulk\_push | 0 | 0 | 
 frontier\_req | 0 | 0 
 keepalive | 0 | 0 | 
-
-<div id="confirm-ack"></div>  
-
-#### confirm\_ack  
+ 
+#### <a name="confirm-ack"></a>confirm\_ack  
 
 The purpose of this message type is to send **votes** to other peers for specific blocks.
 
@@ -163,10 +154,8 @@ hash_prefix | 32 bytes | &nbsp;
 ###### receive  
 
 ![nano-node-confirm-ack-recv]  
-
-<div id="confirm-req"></div>  
-
-#### confirm\_req  
+ 
+#### <a name="confirm-req"></a>confirm\_req  
 
 The purpose of this message type is to request **votes** from other peers for specific blocks. 
 
@@ -196,7 +185,7 @@ The message will either contain the **block** or **roots_hashes** member populat
 
 <div id="keepalive"></div>  
 
-#### keepalive  
+#### <a name="keepalive"></a>keepalive  
 
 The purpose of this message type is to send a set of a node's **peers** to other **peers**. Peers are randomly selected and packed into this message object.
 
@@ -227,9 +216,7 @@ The receive handler for keepalive messages will first check sending peer has not
 
 ![nano-node-process-keepalive]  
 
-<div id="node-id-handshake"></div>  
-
-#### node\_id\_handshake  
+#### <a name="node-id-handshake"></a>node\_id\_handshake  
 
 The node\_id\_handshake allows for node's to uniquely identify one another. The message stores the following data:
 
@@ -264,10 +251,8 @@ Once completed, a new communication channel is created and recorded for this pee
 If **non-existing peer**, assign a syn cookie for this endpoint and start the node\_id\_handshake process sending a **node\_id\_handshake** message to peer.
 
 Finally record stats for this handshake occurrence.  
-
-<div id="publish"></div>  
-
-#### publish  
+  
+#### <a name="publish"></a>publish  
 
 This message type is used to **publish** blocks to network.
 
@@ -304,9 +289,7 @@ link | 32 bytes | Multi-usage: (when)<br/>**sending** = destination account<br/>
 
 ![nano-node-publish-recv]  
 
-<div id="cost"></div>  
-
-### Cost  
+### <a name="cost"></a>Cost  
 
 Network cost summary
 
@@ -324,16 +307,16 @@ node\_id\_handshake | 96 bytes | &nbsp; | 106 bytes
 publish | 216 bytes | &nbsp; | 226 bytes 
 
 
-[peering]: /peering/?#peering
-[add-initial-peers]: /peering/?#add-initial-peers
-[keepalive]: /peering/?#keepalive
-[node-id-handshake]: /peering/?#node-id-handshake  
-[rep-crawler]: /peering/?#rep-crawler
-[confirm-ack]: /peering/?#confirm-ack
-[confirm-req]: /peering/?#confirm-req
-[publish]: /peering/?#publish
-[message-types]: /peering/?#message-types
-[cost]: /peering/?#cost
+[peering]: #peering
+[add-initial-peers]: #add-initial-peers
+[keepalive]: #keepalive
+[node-id-handshake]: #node-id-handshake  
+[rep-crawler]: #rep-crawler
+[confirm-ack]: #confirm-ack
+[confirm-req]: #confirm-req
+[publish]: #publish
+[message-types]: #message-types
+[cost]: #cost
 
 [nano-node-confirm-ack-recv]: ../images/node/nano-node-confirm-ack-recv.png
 [nano-node-confirm-req-recv-contain-block]: ../images/node/nano-node-confirm-req-recv-contain-block.png
