@@ -10,16 +10,16 @@
 	* [preconfigured\_peers]()  
 	* [raw\_units]()  
 	* [representative]()   
-+ [Peering](/peering/?#peering)
-	* [add\_initial\_peers](/peering/?#add_initial_peers)  
-	* [rep\_crawler](/peering/?#rep_crawler)  
-+ [Message Types](/peering/?#message_types)  
-	* [confirm\_ack](/peering/?#confirm_ack)  
-	* [confirm\_req](/peering/?#confirm_req)  
-	* [keepalive](/peering/?#keepalive)
-	* [node\_id\_handshake](/peering/?#node_id_handshake)  
-	* [publish](/peering/?#publish) 
-* [Cost](/peering/?#cost)
++ [Peering](peering)
+	* [add\_initial\_peers][add-initial-peers]  
+	* [rep\_crawler][rep-crawler]  
++ [Message Types][message-types]  
+	* [confirm\_ack][confirm-ack] 
+	* [confirm\_req][confirm-req]  
+	* [keepalive][keepalive]
+	* [node\_id\_handshake][node-id-handshake]
+	* [publish][publish] 
+* [Cost](cost)
 <br/> 
  
 ### Purpose
@@ -54,11 +54,11 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 ### Peering
 
-The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers](/peering/?#add\_initial\_peers)**. If node contains no existing peers, the internal process **[rep\_crawler](/peering/?#rep\_crawler)** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
+The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers](add-initial-peers)**. If node contains no existing peers, the internal process **[rep\_crawler](rep-crawler)** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
 
-The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **keepalive** message (_See [keepalive](/peering/?#keepalive) message type_) to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
+The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **keepalive** message (_See [keepalive](keepalive) message type_) to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
 
-By design, a node receiving a keepalive message will identify if peer is already known. In cases where peer is unknown, node starts up the **[node\_id\_handshake](/peering/?#node_id_handshake)** process with new peer. Once process completes, node will respond with it's own keepalive message. 
+By design, a node receiving a keepalive message will identify if peer is already known. In cases where peer is unknown, node starts up the **[node\_id\_handshake](node-id-handshake)** process with new peer. Once process completes, node will respond with it's own keepalive message. 
 
 The image below depicts the general communication flow to preconfigured peers.
  
@@ -73,7 +73,7 @@ Given nodes operate is a geo-distributed environment (internet), peers can becom
 
 This process is repeated for the life of the node. The following contains a review of these core internal processes.  
 
-<div id="add_initial_peers"></div>  
+<div id="add-initial-peers"></div>  
 
 #### add\_initial\_peers  
 
@@ -83,7 +83,7 @@ This method will validate and verify a node's previous known peers for reuse. Ea
 
 New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers**.  
 
-<div id="rep_crawler"></div>  
+<div id="rep-crawler"></div>  
 
 #### rep\_crawler  
 
@@ -93,7 +93,7 @@ Upon each execution, rep\_crawler attempts to build a list of peers to poll. It 
 
 ![nano-node-repcrawler-ongoing-crawl]  
 
-<div id="message_types"></div>  
+<div id="message-types"></div>  
 
 ### Message Types  
 
@@ -135,7 +135,7 @@ bulk\_push | 0 | 0 |
 frontier\_req | 0 | 0 
 keepalive | 0 | 0 | 
 
-<div id="confirm_ack"></div>  
+<div id="confirm-ack"></div>  
 
 #### confirm\_ack  
 
@@ -164,7 +164,7 @@ hash_prefix | 32 bytes | &nbsp;
 
 ![nano-node-confirm-ack-recv]  
 
-<div id="confirm_req"></div>  
+<div id="confirm-req"></div>  
 
 #### confirm\_req  
 
@@ -227,7 +227,7 @@ The receive handler for keepalive messages will first check sending peer has not
 
 ![nano-node-process-keepalive]  
 
-<div id="node_id_handshake"></div>  
+<div id="node-id-handshake"></div>  
 
 #### node\_id\_handshake  
 
@@ -323,6 +323,15 @@ keepalive | 144 bytes | Min: 3, Max: 7 | 154 bytes
 node\_id\_handshake | 96 bytes | &nbsp; | 106 bytes
 publish | 216 bytes | &nbsp; | 226 bytes 
 
+
+[add-initial-peers]: ?#add-initial-peers
+[keepalive]: ?#keepalive
+[node-id-handshake]: ?#node-id-handshake  
+[rep-crawler]: ?#rep-crawler
+[confirm-ack]: ?#confirm-ack
+[confirm-req]: ?#confirm-req
+[publish]: ?#publish
+[message-types]: ?#message-types
 
 [nano-node-confirm-ack-recv]: ../images/node/nano-node-confirm-ack-recv.png
 [nano-node-confirm-req-recv-contain-block]: ../images/node/nano-node-confirm-req-recv-contain-block.png
