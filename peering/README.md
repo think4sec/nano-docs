@@ -54,9 +54,9 @@ This document is intended for anyone looking to understand the nano's peering ar
 
 ### <a name="peering"></a>Peering
 
-The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers][add-initial-peers]**. If node contains no existing peers, the internal process **[rep\_crawler][rep-crawler]** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
+The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers][add-initial-peers]**. If node contains no existing peers, the internal process named **[rep\_crawler][rep-crawler]** will start the communication process with each peer defined in the **preconfigured\_peers** list. The preconfigured peers are used as seed peers to identify other network participants. 
 
-The default preconfigured\_peer defined is **_peers.nano.org_** . The node starts by sending a **[keepalive][keepalive]** message to each this peer. Node will run idle until preconfigured peers respond with it's own keepalive message.
+The default preconfigured peer is **_peers.nano.org_** . The node starts by sending a **[keepalive][keepalive]** message to this peer. After message is sent, node waits idly until peer responds with a keepalive message of its own.
 
 > Keepalive messages are the backbone for nodes to share peer relationships. Each message sent will contain a dynamic list of peers known to node. See [keepalive][keepalive] section for additional information.
 
@@ -73,7 +73,9 @@ The image below depicts the general communication flow to preconfigured peers.
 
 Given nodes operate is a geo-distributed environment (internet), peers can become stale (peers no longer online, etc..). In order to avoid staleness of peers, the list of peers is refreshed automatically every **300 seconds**. The refresh process consists of removing all stored peer data from data store, iterating over active communication channels, extracting associated endpoint, and committing them to the data store.
 
-This process is repeated for the life of the node. The following sections attempts to describe the core internal processes related to peering.
+This process is repeated for the life of the node. 
+
+The following sections attempts to describe the core internal processes related to peering.
 
 #### <a name="add-initial-peers"></a>add\_initial\_peers  
 
@@ -87,9 +89,12 @@ New nodes will simply have an empty list which would require it to establish com
 
 Rep\_crawler will run every **7 seconds** if node contains sufficient weight (_**delegated+peers online weight**_). Otherwise, run-time is every **3 seconds** until node has communicated with enough peers to satisfy sufficient weight requirement. The sufficient weight must be greater than the **online\_weight\_minimum** (_Default: **6x10^37 raw units**_) configuration entry. 
 
-Upon each execution, rep\_crawler attempts to build a list of peers to poll. It first adds the last known weighted peers to list, prior to adding a set of random peers. The size of random peers to poll range from **15** to **60**. This range is determined by a node's sufficient weight value. Once list is complete, each peer is polled and sent a **confirm\_req** message. This message will contain a random block selected from the ledger. Peers are given up to **5 seconds** to respond with a **confirm\_ack** message. If no response is given, block is simply removed from queue. 
+Upon each execution, rep\_crawler attempts to build a list of peers to poll. It first adds the last known weighted peers to list, prior to adding a set of random peers. The size of random peers appended to this list range from **15** to **60**. This range is determined by a node's sufficient weight value. 
+
+Once list is populated, each peer within the list is sent a **[confirm\_req][confirm-req]** message. This message will contain a random block selected from the ledger. Peers are given up to **5 seconds** to respond with a **[confirm\_ack][confirm-ack]** message. If no response is given, block is simply removed from queue. 
 
 ![nano-node-repcrawler-ongoing-crawl]  
+
 
 ### <a name="message-types"></a>Message Types  
 
