@@ -9,7 +9,10 @@
 	* [peer]()  
 	* [preconfigured\_peers]()  
 	* [raw\_units]()  
-	* [representative]()  
+	* [representative]()   
++ [Peering]("#peering")
+	* [add\_initial\_peers]()  
+	* [rep\_crawler]()  
 + [Message Types]()  
 	* [confirm\_ack]()  
 		- [send]()
@@ -23,13 +26,7 @@
 	* [node\_id\_handshake]()  
 		- [send]()
 		- [receive]()
-	* [publish]()  
-+ [Initial Peering]()
-	* [add\_initial\_peers]()  
-	* [rep\_crawler]()  
-+ [Continous Peering]()
-	* [rep\_crawler thread]()
-	* [ongoing\_peer\_store]()
+	* [publish]() 
 * [Cost]()
 	
 <br/>  
@@ -62,6 +59,49 @@ This document is intended for anyone looking to understand the nano's peering ar
 >
 
 <br/>
+
+  
+
+![nano-node-publish-recv]
+
+<div id="peering">
+### Peering
+</div>
+The peering process starts by identifying and adding any existing peers stored in data store. This internal process is known as **[add\_initial\_peers]()**. If node contains no existing peers, the internal process **[rep\_crawler]()** will start the process of communication with **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
+
+The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by node sending a **keepalive** message (_See [keepalive]() message type above_) to the list of preconfigured peers. Keepalive messages are the backbone to a node building a list of network participants. 
+
+By design, a node receiving a keepalive message will identify if peer is already known. In cases where peer is unknown, node starts up the **node\_id\_handshake** process with new peer. Once process completes, node will respond with it's own keepalive message. 
+
+The image below depicts the general communication flow to preconfigured peers.
+ 
+![nano-node-peering-communication]
+
+
+>**NOTE:**  
+>  
+>  preconfigured\_peers configuration entry is only read upon node bootup. Changes to this list will require a process restart to take effect.
+
+Given nodes operate is a geo-distributed environment (internet), peers can become stale (peers no longer online, etc..). In order to avoid staleness of peers, the list of peers is refreshed automatically every **300 seconds**. The refresh process consists of removing all stored peer data from data store, iterating over active communication channels, extracting associated endpoint, and committing them to data store.
+
+This process is repeated for the life of the node. The following contains a review of these core internal processes.  
+
+#### add\_initial\_peers  
+
+This method will validate and verify a node's previous known peers for reuse. Each previous known peer will go through the **node\_id\_handshake** process.
+
+![nano-node-add-initial-peers]  
+
+New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers**.  
+
+#### rep\_crawler  
+
+Rep\_crawler will run every **7 seconds** if node contains sufficient weight (_**delegated+peers online weight**_). Otherwise, run-time is every **3 seconds** until node has communicated with enough peers to satisfy sufficient weight requirement. The sufficient weight must be greater than the **online\_weight\_minimum** (_Default: **6x10^37 raw units**_) configuration entry. 
+
+Upon each execution, rep\_crawler attempts to build a list of peers to poll. It first adds the last known weighted peers to list, prior to adding a set of random peers. The size of random peers to poll range from **15** to **60**. This range is determined by a node's sufficient weight value. Once list is complete, each peer is polled and sent a **confirm\_req** message. This message will contain a random block selected from the ledger. Peers are given up to **5 seconds** to respond with a **confirm\_ack** message. If no response is given, block is simply removed from queue. 
+
+![nano-node-repcrawler-ongoing-crawl]  
+
 
 ### Message Types  
 
@@ -258,42 +298,7 @@ balance | 16 bytes | Balance of source account
 link | 32 bytes | Multi-usage: (when)<br/>**sending** = destination account<br/>**receiving** = source block hash from senders account
 
 ###### send  
-###### receive  
-
-![nano-node-publish-recv]
-
-### Initial Peering
-
-The peering process starts by identifying and adding any existing peers stored in data store. If their are no existing peers, the internal process **rep\_crawler** will reach out to **preconfigured\_peers**. These preconfigured\_peers are used as seed peers to identify other network participants. 
-
-The default **preconfigured\_peer** is **_peers.nano.org_** . Communication starts by sending a **keepalive** message (_See [keepalive]() message type above_). By design, keepalive messages will attempt to supply any peer with a random selection of it's own peers. Thus the sending of keepalive messages is the building blocks for nodes to establish a near complete list of peers. 
-
-The image below depicts the initial communication flow to preconfigured peers.
- 
-![nano-node-peering-communication]
-
-
->**NOTE:**  
->  
->  preconfigured\_peers configuration entry is only read upon node bootup. Changes to this list will require a process restart to take effect.
-
-The purpose of the **rep\_crawler** process is to establish communication with as many peers to meet the node's defined **online\_weight\_minimum** (_Default: **6x10^37 raw units**_).
-
-#### add\_initial\_peers  
-
-This method will validate and verify a node's previous known peers for reuse. Each previous known peer will go through the **node\_id\_handshake** process.
-
-![nano-node-add-initial-peers]  
-
-New nodes will simply have an empty list which would require it to establish communication with the list of **preconfigured\_peers** to obtain a list of other peers.  
-
-#### rep\_crawler  
-
-Rep\_crawler will run every **7 seconds** if node contains sufficient weight. Otherwise, run-time is every **3 seconds** until node has communicated with a sufficient amount of weighted peers. The total weight of it's peers must be greater than the **online\_weight\_minimum** configuration entry. 
-
-Upon each execution, rep\_crawler attempts to poll last known weighted peers prior to selecting a random set of peers. The size of random peers to poll range from **15** to **60**. This range is determined by a nodes' peer's weight. Once a random list of peers are chosen, each peer is polled and sent a **confirm\_req** message. This message will contain a random block selected from the ledger. Peers are given up to **5 seconds** to respond. If no response is given, block is simply removed from queue. 
-
-![nano-node-repcrawler-ongoing-crawl]
+###### receive 
 
 ### Cost  
 
@@ -309,7 +314,7 @@ Frequency is in seconds
 confirm\_ack | 168 bytes -- ?  | &nbsp; | 178 bytes -- ?
 confirm\_req | (64 or 216) bytes -- ? | &nbsp; | (74 or 226) bytes -- ?
 keepalive | 144 bytes | Min: 3, Max: 7 | 154 bytes
-node\_id\_handshake | 96 bytes | &nbsp; | 108 bytes
+node\_id\_handshake | 96 bytes | &nbsp; | 106 bytes
 publish | 216 bytes | &nbsp; | 226 bytes 
 
 
