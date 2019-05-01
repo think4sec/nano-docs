@@ -37,7 +37,7 @@ This document is intended for anyone looking to understand the nano's peering ar
 >_Represents the foundation of any distributed network. Peers in the nano network are responsible for replicating transaction blocks to other peers, such that each peer contain the same set of transaction blocks._
 
 >### <a name="preconfigured-peers"></a>**preconfigured_peers**
->_Represents a list of peers that aide in establishing a connection to identify peers a node can obtain distributed ledger._
+>_Represents a list of peers that aide in establishing communication with other network participants._
 
 >### <a name="raw-units"></a>**raw units**  
 >_Nano contains a total circulating supply is approximately **1.33x10^37** raw units. General measurement is done in **NANO** which is 1x10^29 raw units (**1 NANO**)._
@@ -87,14 +87,26 @@ New nodes will simply have an empty list which would require it to establish com
 
 #### <a name="rep-crawler"></a>rep\_crawler  
 
-Rep\_crawler will run every **7 seconds** if node contains sufficient weight (_**delegated+peers online weight**_). Otherwise, run-time is every **3 seconds** until node has communicated with enough peers to satisfy sufficient weight requirement. The sufficient weight must be greater than the **online\_weight\_minimum** (_Default: **6x10^37 raw units**_) configuration entry. 
+Rep crawler primary purpose is to ensure the node has established enough sufficient weight (_**delegated+peers online weight**_), to properly participate in the network. 
 
-Upon each execution, rep\_crawler attempts to build a list of peers to poll. It first adds the last known weighted peers to list, prior to adding a set of random peers. The size of random peers appended to this list range from **15** to **60**. This range is determined by a node's sufficient weight value. 
+The run-time characteristics of this process is as follows:
 
-Once list is populated, each peer within the list is sent a **[confirm\_req][confirm-req]** message. This message will contain a random block selected from the ledger. Peers are given up to **5 seconds** to respond with a **[confirm\_ack][confirm-ack]** message. If no response is given, block is simply removed from queue. 
+| Sufficient Weight | Run-time |
+--- | ---
+Yes | 7 seconds
+No | 3 seconds  
+
+The sufficient weight must be greater than the **online\_weight\_minimum** (_Default: **6x10^37 raw units**_) configuration entry. 
+
+Upon each execution, rep\_crawler attempts to discover weighted peers (_representative_). Initially, last known weighted peers are added to the list of channels, then a random set of peers are selected. The size of random peers selected, range from **15** to **60**. The range is determined by a node's sufficient weight value. 
+
+Once list selection is done, each peer within the list is sent a **[confirm\_req][confirm-req]** message. This message will contain a random block selected from the ledger. Peers are given up to **5 seconds** to respond with a **[confirm\_ack][confirm-ack]** message. If no response is given, block is simply removed from queue. 
 
 ![nano-node-repcrawler-ongoing-crawl]  
 
+Internally an observer pattern is used to observed a response _([confirm\_ack][confirm-ack] messages)_ to our request. Each vote response observed, node will check if peer meets expected weight _(**online peers weight / 1000**)_. If weight is met, peer is added to node's internal weighted peer container. Addition of new peer to container will invoke node to submit all known winning blocks _([confirm\_req][confirm-req] message)_ to weighted peer for vote.
+ 
+The next section discusses message types used for peer communication. 
 
 ### <a name="message-types"></a>Message Types  
 
@@ -185,7 +197,7 @@ The message will either contain the **block** or **roots_hashes** member populat
 
 #### <a name="keepalive"></a>keepalive  
 
-The purpose of this message type is to send a set of a node's **peers** to other **peers**. Peers are randomly selected and packed into this message object.
+The purpose of this message type is to share a node's peer list with other network peers.
 
 The message contains the following data:
 
@@ -296,6 +308,8 @@ Network cost summary
 
 Frequency is in seconds  
 
+#### Basic packet cost in terms of size:  
+
 | Message | Size | Frequency | Total  
 --- | ---  | --- | --- 
 confirm\_ack | 168 bytes -- ?  | &nbsp; | 178 bytes -- ?
@@ -303,6 +317,34 @@ confirm\_req | (64 or 216) bytes -- ? | &nbsp; | (74 or 226) bytes -- ?
 keepalive | 144 bytes | Min: 3, Max: 7 | 154 bytes
 node\_id\_handshake | 96 bytes | &nbsp; | 106 bytes
 publish | 216 bytes | &nbsp; | 226 bytes 
+
+#### New weighted peer connected to node:
+  
+##### Initial Communication  
+| Direction | Send Size | Recv Size | Total
+--- | --- | --- | ---
+send keepalive message | 154 bytes | | 154 bytes
+receive node\_id\_handshake message | &nbsp; | 106 bytes | 106 bytes
+send node\_id\_handshake message| 106 bytes | &nbsp; | 106 bytes
+receive keepalive message | &nbsp; | 154 bytes | 154 byte
+&nbsp; | 260 bytes | 260 bytes | **520 bytes**
+
+
+##### Probe to detected weighted peer
+| Direction | Send Size | Recv Size | Total
+--- | --- | --- | --- 
+send confirm\_req message| 226 bytes | &nbsp; | 226 bytes
+receive confirm\_ack message| &nbsp; | 354 bytes | 354 bytes
+&nbsp;|226 bytes | 354 bytes | **580 bytes** 
+
+##### Peer added to weighted peer container  
+
+| Direction | Send Size | Recv Size| Total
+--- | --- | --- | ---
+send confirm\_req message | 226 bytes  | &nbsp; | 226 bytes
+receive confirm\_ack message |  | 354 bytes | 356 bytes
+&nbsp; | 226 bytes | 354 bytes | **580 bytes** x _winning-blocks_
+  
 
 [add-initial-peers]: #add-initial-peers
 [keepalive]: #keepalive
