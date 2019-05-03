@@ -1,0 +1,40 @@
+@startuml
+
+skinparam TitleFontSize 30
+skinparam ActivityFontSize 20
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*) --> Publish
+if Block Processor Not Full
+    note left
+    Queue size dependent on **fast_bootstrap** flag.
+    
+    Enabled size is **1048576**
+    Disabled size is **65536**
+    end note
+    -->[True] "Block Arrival Queue"
+    note left
+    List of block hashes for blocks recently received
+    end note
+    --> "Block Processor Queue"
+    note bottom
+    Queue to hold **unchecked** blocks for processing
+    end note
+    --> "Active Transactions Queue"
+else
+    -->[False] "Active Transactions Queue"
+end if
+
+note bottom
+Block stored pending voting results
+end note
+
+--> Election Queue
+note bottom
+Election started for block
+Block is published to network for peers
+end note
+@enduml
+

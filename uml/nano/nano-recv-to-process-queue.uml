@@ -1,0 +1,54 @@
+@startuml
+
+skinparam TitleFontSize 30
+skinparam ActivityFontSize 20
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*) --> "UDP Receiver"
+
+note top
+**io_threads** configuration controls total receive listener
+threads running for peer communication.
+end note
+
+(*) --> "Packet Processing Thread"
+
+note left
+**network_threads** configuration controls total packet 
+processing threads launched to process data received from
+peers.
+end note
+
+"UDP Receiver" -->[enqueue] PacketQueue
+
+note right
+Internal **buffer_container** queue to hold messages
+received from peers
+end note
+
+PacketQueue -->[dequeue] "Packet Processing Thread"
+
+"Packet Processing Thread" --> "Deserialize Message"
+note right
+Deserialize the following message types:
+
+deserialize_keepalive
+deserialize_publish
+deserialize_confirm_req
+deserialize_confirm_ack
+deserialize_node_id_handshake
+end note
+"Deserialize Message" --> "Process Message"
+note left
+Based on message type, the associated handler method for
+**udp_message_visitor** will be executed:
+
+keepalive, publish, confirm_req, confirm_ack, etc..
+
+Each message handler will invoke an appropriate 
+**network_message_visitor** handler function.
+end note
+
+@enduml

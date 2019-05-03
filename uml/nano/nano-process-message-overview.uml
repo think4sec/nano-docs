@@ -1,0 +1,57 @@
+@startuml
+
+skinparam TitleFontSize 30
+skinparam ActivityFontSize 20
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+(*) --> "Process Message"
+
+"Process Message" -left> "Publish"
+
+note bottom
+**network_message_visitor::publish** handler
+--
+**Message to publish blocks to network**
+
+2. Track newly received **block hash**
+3. Add block to **block_processor** queue
+
+4. Verify block's previous stated tx exists and contains
+valid signature
+5. Relay block to sqrt(peers)
+end note
+
+"Process Message" --> "Confirm Req"
+
+note bottom
+**network_message_visitor::confirm_req** handler
+--
+**Message to request vote data**
+end note
+
+"Process Message" --> "Confirm Ack"
+
+note bottom
+**network_message_visitor::confirm_ack** handler
+--
+**Message to transmit vote data**
+end note
+
+"Process Message" --> "Keepalive"
+
+note bottom
+**udp_message_visitor::keepalive** handler
+--
+**Message to transmit peer topology data**
+
+end note
+"Process Message" -right> "Node Id Handshake"
+note bottom
+**udp_message_visitor::node_id_handshake** handler
+--
+**Message to transmit syn_cookie for peer identification**
+end note
+
+@enduml
