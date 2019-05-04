@@ -1,0 +1,70 @@
+@startuml
+
+skinparam TitleFontSize 30
+skinparam ActivityFontSize 20
+skinparam ActivityBackgroundColor #FFFFFF
+skinparam ArrowColor Black
+skinparam ActivityBorderColor Black
+
+"Block Processor Queue" --> Process Blocks
+note right
+Blocks added to block processor queue are encapsulated 
+in an **unchecked_info** object.
+
+Blocks must have valid work before being added to
+block_processor queue. In addition, block hashes are 
+added to lookup table to avoid being processed
+more than once. Blocks not found in lookup table
+nor located in rolled_back table will be added to
+either **state_blocks** or **blocks** queue. When blocks
+are added, it notifies block_processor to run if not
+already running.
+
+The block_processor thread is responsible for processing
+all **unchecked** blocks. All blocks start in this state.
+end note
+
+if ContainBlocks
+note right
+Run if blocks are listed in any of the following queues:
+
+**blocks**
+**forced**
+**state_blocks**
+end note
+    -->[True]"Process Batch of Blocks"
+else
+    -left>[False] Sleep until notified to run
+    
+end if
+
+"Process Batch of Blocks" --> Verify State Blocks
+note top
+Attempt to verify the following:
+
+Block does not exist in ledger
+<secondary review>...
+
+Limit verification range to [ **1**, **2048 x signature_checker_threads + 1**]
+or by setting **block_processor_verification_size**
+end note
+
+--> "Iterate over blocks in **blocks** and **forced** queues"
+note left
+Limit run-time to:
+
+**block_processor_batch_max_time**: Total time to allow blocks
+to be processed
+
+or 
+
+**block_processor_batch_size** : Total blocks to process per run
+end note
+-> "Detect rollbacks"
+"Detect rollbacks" ..up> "Replace reverted block"
+"Replace reverted block" -> Remove votes for reverted block
+"Detect rollbacks" --> "Process Block"
+"Process Block" -left> "Verify State Blocks Again"
+"Verify State Blocks Again" -up> "Iterate over blocks in **blocks** and **forced** queues"
+
+@enduml
